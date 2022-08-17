@@ -2,8 +2,9 @@ from typing import List
 
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import parse_obj_as
 
-from src.infra.pydantic.models.Transaction import TransactionBase
+from src.infra.pydantic.models.Transaction import TransactionSchema
 from src.infra.models.transaction import Transaction
 from src.domain.interfaces.transactions_repository import (
     TransactionsRepositoryInterface,
@@ -18,7 +19,7 @@ class TransactionsRepository(TransactionsRepositoryInterface):
 
     async def get_transactions(
         self, skip: int = 0, limit: int = 100
-    ) -> List[TransactionBase]:
+    ) -> List[TransactionSchema]:
         """Get all transactions list"""
 
         async with self.db_session() as session:
@@ -29,10 +30,12 @@ class TransactionsRepository(TransactionsRepositoryInterface):
 
             transactions = query_response.scalars().all()
 
-            return transactions
+            transactions_schema = parse_obj_as(List[TransactionSchema], transactions)
 
-    async def create_transaction(self, transaction: TransactionBase) -> None:
-        """Create transaction"""
+            return transactions_schema
+
+    async def create_transaction(self, transaction: TransactionSchema) -> None:
+        """Create a transaction"""
 
         async with self.db_session() as session:
 

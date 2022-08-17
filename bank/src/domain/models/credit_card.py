@@ -7,7 +7,7 @@ class CreditCard:
 
     def __init__(self) -> None:
         self.id = uuid4()
-        self.createdAt = datetime.now()
+        self.created_at = datetime.now()
 
     id: UUID
     name: str
@@ -17,4 +17,4 @@ class CreditCard:
     CVV: int
     balance: float
     limit: float
-    createdAt: datetime
+    created_at: datetime
