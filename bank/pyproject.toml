@@ -7,6 +7,9 @@ authors = ["pauloreis7 <paulosilvadosreis2057@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 pydantic = "^1.9.2"
+SQLAlchemy = "^1.4.40"
+asyncpg = "^0.26.0"
+alembic = "^1.8.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
