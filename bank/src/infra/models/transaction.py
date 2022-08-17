@@ -20,7 +20,7 @@ class Transaction(Base):
     description = Column(Text, nullable=False)
     store = Column(String(50), nullable=False)
     credit_card_id = Column(
-        String(50),
+        UUID(as_uuid=True),
         ForeignKey("credit_cards.id", onupdate="CASCADE", ondelete="CASCADE"),
         nullable=False,
     )
