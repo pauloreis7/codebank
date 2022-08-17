@@ -7,12 +7,12 @@ class Transaction:
 
     def __init__(self) -> None:
         self.id = uuid4()
-        self.createdAt = datetime.now()
+        self.created_at = datetime.now()
 
     id: UUID
     amount: float
     status: str
     description: str
     store: str
-    creditCardId: str
-    createdAt: datetime
+    credit_card_id: str
+    created_at: datetime
