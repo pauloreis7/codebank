@@ -1,8 +1,10 @@
 from typing import Type
 
 from src.domain.models.credit_card import CreditCard
-from src.domain.pydantic.models.CreditCard import CreditCardCreate
-from src.domain.interfaces.credit_cards_repository import CreditCardsRepositoryInterface
+from src.domain.pydantic.models.CreditCard import CreditCardCreateDto
+from src.domain.interfaces.repositories.credit_cards_repository import (
+    CreditCardsRepositoryInterface,
+)
 
 
 class CreateCreditCardUsecase:
@@ -13,22 +15,22 @@ class CreateCreditCardUsecase:
     ) -> None:
         self.__credit_cards_repository = credit_cards_repository
 
-    async def create_credit_card(self, credit_card_data: CreditCardCreate) -> None:
+    async def create_credit_card(self, credit_card_dto: CreditCardCreateDto) -> None:
         """
         Create credit_card model
-        :param  - credit_card_data: Credit card data for create
+        :param  - credit_card_dto: Credit card data for create
         :returns - None for create credit_card event status
         """
 
         credit_card = CreditCard()
 
-        credit_card.name = credit_card_data.name
-        credit_card.number = credit_card_data.number
-        credit_card.expiration_month = credit_card_data.expiration_month
-        credit_card.expiration_year = credit_card_data.expiration_year
-        credit_card.CVV = credit_card_data.CVV
-        credit_card.balance = credit_card_data.balance
-        credit_card.limit = credit_card_data.limit
+        credit_card.name = credit_card_dto.name
+        credit_card.number = credit_card_dto.number
+        credit_card.expiration_month = credit_card_dto.expiration_month
+        credit_card.expiration_year = credit_card_dto.expiration_year
+        credit_card.CVV = credit_card_dto.CVV
+        credit_card.balance = credit_card_dto.balance
+        credit_card.limit = credit_card_dto.limit
 
         check_credit_card_exists = (
             await self.__credit_cards_repository.get_credit_card_by_number(

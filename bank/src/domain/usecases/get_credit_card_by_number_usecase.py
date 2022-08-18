@@ -1,7 +1,9 @@
 from typing import Type
 
 from src.domain.models.credit_card import CreditCard
-from src.domain.interfaces.credit_cards_repository import CreditCardsRepositoryInterface
+from src.domain.interfaces.repositories.credit_cards_repository import (
+    CreditCardsRepositoryInterface,
+)
 
 
 class GetCreditCardByNumberUsecase:

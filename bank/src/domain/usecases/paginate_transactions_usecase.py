@@ -1,7 +1,7 @@
 from typing import List, Type
 
 from src.domain.models.transaction import Transaction
-from src.domain.interfaces.transactions_repository import (
+from src.domain.interfaces.repositories.transactions_repository import (
     TransactionsRepositoryInterface,
 )
 

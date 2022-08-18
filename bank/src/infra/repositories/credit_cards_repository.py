@@ -4,7 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.infra.pydantic.models.CreditCard import CreditCardSchema
 from src.infra.models.credit_card import CreditCard
-from src.domain.interfaces.credit_cards_repository import CreditCardsRepositoryInterface
+from src.domain.interfaces.repositories.credit_cards_repository import (
+    CreditCardsRepositoryInterface,
+)
 
 
 class CreditCardsRepository(CreditCardsRepositoryInterface):

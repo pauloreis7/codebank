@@ -2,8 +2,10 @@ from typing import Type
 
 from src.domain.models.transaction import Transaction
 from src.domain.pydantic.models.Transaction import TransactionCreateDto
-from src.domain.interfaces.credit_cards_repository import CreditCardsRepositoryInterface
-from src.domain.interfaces.transactions_repository import (
+from src.domain.interfaces.repositories.credit_cards_repository import (
+    CreditCardsRepositoryInterface,
+)
+from src.domain.interfaces.repositories.transactions_repository import (
     TransactionsRepositoryInterface,
 )
 
@@ -19,16 +21,16 @@ class CreateTransactionUsecase:
         self.__credit_cards_repository = credit_cards_repository
         self.__transactions_repository = transactions_repository
 
-    async def create_transaction(self, transaction_data: TransactionCreateDto) -> None:
+    async def create_transaction(self, transaction_dto: TransactionCreateDto) -> None:
         """
         Create transaction model
-        :param  - transaction_data: Transaction data for create
+        :param  - transaction_dto: Transaction data for create
         :returns - None for create transaction event status
         """
 
         check_credit_card_exists = (
             await self.__credit_cards_repository.get_credit_card_by_number(
-                credit_card_number=transaction_data.number
+                credit_card_number=transaction_dto.number
             )
         )
 
@@ -38,10 +40,10 @@ class CreateTransactionUsecase:
         transaction = Transaction()
 
         transaction.credit_card_id = check_credit_card_exists.id
-        transaction.amount = transaction_data.amount
+        transaction.amount = transaction_dto.amount
         transaction.status = "approved"
-        transaction.store = transaction_data.store
-        transaction.description = transaction_data.description
+        transaction.store = transaction_dto.store
+        transaction.description = transaction_dto.description
 
         check_credit_card_limit = (
             transaction.amount + check_credit_card_exists.balance

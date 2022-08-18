@@ -6,7 +6,7 @@ from pydantic import parse_obj_as
 
 from src.infra.pydantic.models.Transaction import TransactionSchema
 from src.infra.models.transaction import Transaction
-from src.domain.interfaces.transactions_repository import (
+from src.domain.interfaces.repositories.transactions_repository import (
     TransactionsRepositoryInterface,
 )
 
