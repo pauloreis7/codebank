@@ -9,8 +9,8 @@ class CreditCardBase(BaseModel):
 
     name: str
     number: str
-    expirationMonth: int
-    expirationYear: int
+    expiration_month: int
+    expiration_year: int
     CVV: int
     balance: float
     limit: float

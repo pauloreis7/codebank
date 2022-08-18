@@ -30,8 +30,8 @@ async def create_credit_card(
 
     credit_card.name = "Jonh Doe"
     credit_card.number = "123456"
-    credit_card.expirationMonth = 8
-    credit_card.expirationYear = 2024
+    credit_card.expiration_month = 8
+    credit_card.expiration_year = 2024
     credit_card.CVV = 123
     credit_card.balance = 200
     credit_card.limit = 1000
@@ -81,25 +81,25 @@ async def main():
     transactionsRepository = TransactionsRepository(db_session)
     creditCardsRepository = CreditCardsRepository(db_session)
 
-    # await create_credit_card(creditCardsRepository)
+    await create_credit_card(creditCardsRepository)
 
     credit_card = await get_credit_card_by_number(creditCardsRepository, "123456")
     print(credit_card)
 
-    # await patch_credit_card_balance(creditCardsRepository, credit_card.id)
-
-    # updated_credit_card = await get_credit_card_by_number(
-    #     creditCardsRepository, "123456"
-    # )
-    # print(updated_credit_card)
-
     transactions = await get_transactions(transactionsRepository)
     print(transactions)
 
-    # await create_transaction(transactionsRepository, credit_card_id=credit_card.id)
+    await create_transaction(transactionsRepository, credit_card_id=credit_card.id)
 
-    # updated_transactions = await get_transactions(transactionsRepository)
-    # print(updated_transactions)
+    updated_transactions = await get_transactions(transactionsRepository)
+    print(updated_transactions)
+
+    await patch_credit_card_balance(creditCardsRepository, credit_card.id)
+
+    updated_credit_card = await get_credit_card_by_number(
+        creditCardsRepository, "123456"
+    )
+    print(updated_credit_card)
 
     await db_session().close()
 

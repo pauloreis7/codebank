@@ -26,6 +26,9 @@ class CreditCardsRepository(CreditCardsRepositoryInterface):
 
             credit_card = query_response.scalars().first()
 
+            if credit_card is None:
+                return
+
             credit_card_schema = CreditCardSchema.from_orm(credit_card)
 
             return credit_card_schema
@@ -39,8 +42,8 @@ class CreditCardsRepository(CreditCardsRepositoryInterface):
                 id=credit_card.id,
                 name=credit_card.name,
                 number=credit_card.number,
-                expirationMonth=credit_card.expirationMonth,
-                expirationYear=credit_card.expirationYear,
+                expiration_month=credit_card.expiration_month,
+                expiration_year=credit_card.expiration_year,
                 CVV=credit_card.CVV,
                 balance=credit_card.balance,
                 limit=credit_card.limit,

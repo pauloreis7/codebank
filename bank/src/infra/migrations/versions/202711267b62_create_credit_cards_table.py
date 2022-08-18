@@ -1,7 +1,7 @@
 """create credit_cards table
 
 Revision ID: 202711267b62
-Revises: 
+Revises:
 Create Date: 2022-08-17 10:00:21.996587
 
 """
@@ -23,8 +23,8 @@ def upgrade() -> None:
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("name", sa.String(length=50), nullable=False),
         sa.Column("number", sa.String(length=50), nullable=False),
-        sa.Column("expirationMonth", sa.Integer(), nullable=False),
-        sa.Column("expirationYear", sa.Integer(), nullable=False),
+        sa.Column("expiration_month", sa.Integer(), nullable=False),
+        sa.Column("expiration_year", sa.Integer(), nullable=False),
         sa.Column("CVV", sa.Integer(), nullable=False),
         sa.Column("balance", sa.Float(), nullable=False),
         sa.Column("limit", sa.Float(), nullable=False),
