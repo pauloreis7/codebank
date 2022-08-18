@@ -1,7 +1,7 @@
 from typing import Type
 
 from src.domain.models.transaction import Transaction
-from src.domain.pydantic.models.Transaction import TransactionCreateDto
+from src.domain.dtos.models.Transaction import TransactionCreateDto
 from src.domain.interfaces.repositories.credit_cards_repository import (
     CreditCardsRepositoryInterface,
 )

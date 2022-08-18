@@ -3,7 +3,7 @@ from typing import Type
 from src.domain.interfaces.controllers.create_transaction_controller import (
     CreateTransactionControllerInterface,
 )
-from src.domain.pydantic.models.Transaction import TransactionCreateDto
+from src.domain.dtos.models.Transaction import TransactionCreateDto
 from src.domain.usecases.create_transaction_usecase import CreateTransactionUsecase
 
 

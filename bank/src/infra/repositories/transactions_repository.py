@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,14 +18,19 @@ class TransactionsRepository(TransactionsRepositoryInterface):
     def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
 
-    async def get_transactions(
-        self, skip: int = 0, limit: int = 100
+    async def get_transactions_by_card_id(
+        self, credit_card_id: UUID, skip: int = 0, limit: int = 100
     ) -> List[TransactionSchema]:
         """Get all transactions list"""
 
         async with self.db_session() as session:
 
-            query = select(Transaction).offset(skip).limit(limit)
+            query = (
+                select(Transaction)
+                .where(Transaction.credit_card_id == credit_card_id)
+                .offset(skip)
+                .limit(limit)
+            )
 
             query_response = await session.execute(query)
 

@@ -1,6 +1,6 @@
 from typing import Type
 
-from src.domain.pydantic.models.CreditCard import CreditCardCreateDto
+from src.domain.dtos.models.CreditCard import CreditCardCreateDto
 from src.domain.usecases.create_credit_card_usecase import CreateCreditCardUsecase
 from src.domain.interfaces.controllers.create_credit_card_controller import (
     CreateCreditCardControllerInterface,

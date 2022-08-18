@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.domain.pydantic.models.CreditCard import CreditCardCreateDto
+from src.domain.dtos.models.CreditCard import CreditCardCreateDto
 
 
 class CreateCreditCardControllerInterface(ABC):

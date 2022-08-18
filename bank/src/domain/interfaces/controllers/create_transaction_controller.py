@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.domain.pydantic.models.Transaction import TransactionCreateDto
+from src.domain.dtos.models.Transaction import TransactionCreateDto
 
 
 class CreateTransactionControllerInterface(ABC):
