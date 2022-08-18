@@ -16,7 +16,7 @@ class CreateCreditCardUsecase:
     async def create_credit_card(self, credit_card_data: CreditCardCreate) -> None:
         """
         Create credit_card model
-        :param  - credit_card: Credit card data for create
+        :param  - credit_card_data: Credit card data for create
         :returns - None for create credit_card event status
         """
 

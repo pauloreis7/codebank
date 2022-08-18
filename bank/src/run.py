@@ -1,54 +1,36 @@
 from asyncio import run
-from uuid import UUID
+
+from src.domain.pydantic.models.Transaction import TransactionCreateDto
+from src.domain.usecases.create_transaction_usecase import CreateTransactionUsecase
 
 from src.domain.pydantic.models.CreditCard import CreditCardCreate
 from src.domain.usecases.create_credit_card_usecase import CreateCreditCardUsecase
+from src.domain.usecases.paginate_transactions_usecase import (
+    PaginateTransactionsUsecase,
+)
 from src.domain.usecases.get_credit_card_by_number_usecase import (
     GetCreditCardByNumberUsecase,
 )
 
 from src.infra.config.db_connection import setup_db_session
-from src.domain.interfaces.credit_cards_repository import CreditCardsRepositoryInterface
 from src.infra.repositories.credit_cards_repository import CreditCardsRepository
-from src.domain.models.transaction import Transaction
-from src.domain.interfaces.transactions_repository import (
-    TransactionsRepositoryInterface,
-)
 from src.infra.repositories.transactions_repository import TransactionsRepository
 
 
-async def patch_credit_card_balance(
-    creditCardsRepository: CreditCardsRepositoryInterface, credit_card_id: UUID
-):
+def hydrate_transaction_dto():
 
-    await creditCardsRepository.patch_credit_card_balance(
-        credit_card_id=credit_card_id, updated_balance=100
+    transaction_dto = TransactionCreateDto(
+        amount=10,
+        store="someStore",
+        description="example transaction",
+        name="Jonh Doe",
+        number="1234567",
+        expirationMonth=8,
+        expirationYear=2024,
+        CVV=123,
     )
 
-    return
-
-
-async def get_transactions(transactionsRepository: TransactionsRepositoryInterface):
-    transactions = await transactionsRepository.get_transactions()
-
-    return transactions
-
-
-async def create_transaction(
-    transactionsRepository: TransactionsRepositoryInterface, credit_card_id: UUID
-):
-
-    transaction = Transaction()
-
-    transaction.amount = 10
-    transaction.status = "approved"
-    transaction.description = "example transaction"
-    transaction.store = "someStore"
-    transaction.credit_card_id = credit_card_id
-
-    await transactionsRepository.create_transaction(transaction=transaction)
-
-    return
+    return transaction_dto
 
 
 async def main():
@@ -58,6 +40,14 @@ async def main():
     creditCardsRepository = CreditCardsRepository(db_session)
 
     create_credit_card_usecase = CreateCreditCardUsecase(creditCardsRepository)
+    get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(
+        creditCardsRepository
+    )
+
+    paginate_transactions_usecase = PaginateTransactionsUsecase(transactionsRepository)
+    create_transaction_usecase = CreateTransactionUsecase(
+        creditCardsRepository, transactionsRepository
+    )
 
     credit_card_data = CreditCardCreate(
         name="Jonh Doe",
@@ -71,33 +61,31 @@ async def main():
 
     await create_credit_card_usecase.create_credit_card(credit_card_data)
 
-    get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(
-        creditCardsRepository
+    credit_card_response = (
+        await get_credit_card_by_number_usecase.get_credit_card_by_number(
+            credit_card_number="1234567"
+        )
+    )
+    print("credit_card_response ===>", credit_card_response)
+
+    response = await paginate_transactions_usecase.paginate_transactions()
+    print("paginate_transactions ===>", response)
+
+    transaction_dto = hydrate_transaction_dto()
+
+    await create_transaction_usecase.create_transaction(
+        transaction_data=transaction_dto
     )
 
-    response = await get_credit_card_by_number_usecase.get_credit_card_by_number(
-        credit_card_number="1234567"
+    new_response = await paginate_transactions_usecase.paginate_transactions()
+    print("new_paginate_transactions ===>", new_response)
+
+    new_credit_card_response = (
+        await get_credit_card_by_number_usecase.get_credit_card_by_number(
+            credit_card_number="1234567"
+        )
     )
-
-    print(response)
-
-    # credit_card = await get_credit_card_by_number(creditCardsRepository, "123456")
-    # print(credit_card)
-
-    transactions = await get_transactions(transactionsRepository)
-    print(transactions)
-
-    # await create_transaction(transactionsRepository, credit_card_id=credit_card.id)
-
-    # updated_transactions = await get_transactions(transactionsRepository)
-    # print(updated_transactions)
-
-    # await patch_credit_card_balance(creditCardsRepository, credit_card.id)
-
-    # updated_credit_card = await get_credit_card_by_number(
-    #     creditCardsRepository, "123456"
-    # )
-    # print(updated_credit_card)
+    print("new_credit_card_response ===>", new_credit_card_response)
 
     await db_session().close()
 

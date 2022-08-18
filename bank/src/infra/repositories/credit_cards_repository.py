@@ -13,6 +13,24 @@ class CreditCardsRepository(CreditCardsRepositoryInterface):
     def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
 
+    async def get_credit_card_by_id(self, credit_card_id: UUID) -> CreditCardSchema:
+        """Get a credit card by it's id"""
+
+        async with self.db_session() as session:
+
+            query = select(CreditCard).where(CreditCard.id == credit_card_id)
+
+            query_response = await session.execute(query)
+
+            credit_card = query_response.scalars().first()
+
+            if credit_card is None:
+                return
+
+            credit_card_schema = CreditCardSchema.from_orm(credit_card)
+
+            return credit_card_schema
+
     async def get_credit_card_by_number(
         self, credit_card_number: str
     ) -> CreditCardSchema:

@@ -1,6 +1,3 @@
-from uuid import UUID
-from datetime import datetime
-
 from pydantic import BaseModel
 
 
@@ -8,19 +5,15 @@ class TransactionBase(BaseModel):
     """Transaction Base Model"""
 
     amount: float
-    status: str
-    description: str
     store: str
-    credit_card_id: UUID
+    description: str
 
 
-class TransactionSchema(TransactionBase):
-    """Transaction Model read"""
+class TransactionCreateDto(TransactionBase):
+    """Create transaction Model data"""
 
-    id: UUID
-    created_at: datetime
-
-    class Config:
-        """Orm serialized read"""
-
-        orm_mode = True
+    name: str
+    number: str
+    expirationMonth: int
+    expirationYear: int
+    CVV: int
