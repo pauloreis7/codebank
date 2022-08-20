@@ -3,7 +3,7 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-import payment_pb2 as payment__pb2
+import src.infra.grpc.pb.payment_pb2 as payment__pb2
 
 
 class PaymentServiceStub(object):
