@@ -11,6 +11,8 @@ SQLAlchemy = "^1.4.40"
 asyncpg = "^0.26.0"
 alembic = "^1.8.1"
 python-dotenv = "^0.20.0"
+grpcio = "^1.48.0"
+grpcio-tools = "^1.48.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
