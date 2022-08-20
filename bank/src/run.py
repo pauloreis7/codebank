@@ -10,12 +10,12 @@ from src.infra.grpc.pb import payment_pb2
 from src.infra.config.db_connection import setup_db_session
 from src.infra.repositories.credit_cards_repository import CreditCardsRepository
 
-from src.main.composers.get_transactions_by_card_number_composer import (
-    get_transactions_by_card_number_composer,
-)
-
 from src.domain.usecases.get_credit_card_by_number_usecase import (
     GetCreditCardByNumberUsecase,
+)
+
+from src.main.composers.get_transactions_by_card_number_composer import (
+    get_transactions_by_card_number_composer,
 )
 
 load_dotenv()
@@ -58,7 +58,7 @@ async def main():
             request=payment_pb2.PaymentRequest(
                 creditCard=credit_card,
                 amount=10,
-                store="SomeStore",
+                store="SomeStore02",
                 description="Example desc...",
             )
         )
