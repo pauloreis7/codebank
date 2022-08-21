@@ -2,10 +2,16 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { Flex, Heading, SimpleGrid } from '@chakra-ui/react'
 
-import { products } from '../utils/products'
+import { apiRoutes } from '../services/api'
+import { ProductProps } from '../types'
+
 import { Product } from '../components/pages/home/Product'
 
-const Home: NextPage = () => {
+type HomeProps = {
+  products: ProductProps[]
+}
+
+const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
@@ -54,8 +60,12 @@ const Home: NextPage = () => {
 
 export default Home
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  const { data: products } = await apiRoutes.get('products')
+
   return {
-    props: {}
+    props: {
+      products
+    }
   }
 }
