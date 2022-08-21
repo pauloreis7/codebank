@@ -55,7 +55,7 @@ export function Product({ slug, imageUrl, name }: ProductProps) {
             p="2"
             color="gray.200"
             backgroundColor="transparent"
-            borderRadius="sm"
+            borderRadius="md"
             fontWeight="400"
             textTransform="lowercase"
             _hover={{
