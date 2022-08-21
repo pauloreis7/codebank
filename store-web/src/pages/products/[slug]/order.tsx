@@ -1,27 +1,28 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 
 import Head from 'next/head'
-import {
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  Heading,
-  InputGroup,
-  SimpleGrid,
-  Text,
-  VStack
-} from '@chakra-ui/react'
+import { Button, Flex, Heading, VStack } from '@chakra-ui/react'
+import { AxiosError } from 'axios'
+
+import { ProductProps } from '../../../types'
+import { apiRoutes } from '../../../services/api'
 
 import { BackButton } from '../../../components/BackButton'
-import { Input } from '../../../components/Input'
+import { ProductInfos } from '../../../components/pages/ProductOrder/ProductInfos'
+import { FormInputGroup } from '../../../components/pages/ProductOrder/FormInputGroup'
 
-const ProductOrder: NextPage = () => {
+type ProductOrderProps = {
+  product: ProductProps
+}
+
+const ProductOrder: NextPage<ProductOrderProps> = ({
+  product
+}: ProductOrderProps) => {
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
-        <title>{`{product.name} | CodeBank`}</title>
-        <meta name="description" content="CodeBank Home" />
+        <title>{`${product.name} | Checkout`}</title>
+        <meta name="description" content="CodeBank Checkout" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -37,7 +38,7 @@ const ProductOrder: NextPage = () => {
           py="8"
           px="6"
         >
-          <BackButton text="back" href="/" />
+          <BackButton text="back" href={`/products/${product.slug}`} />
 
           <Flex
             as="section"
@@ -46,78 +47,20 @@ const ProductOrder: NextPage = () => {
             flexShrink="1"
             flexBasis="0"
             flexDirection="column"
-            maxH={['100%', '100%', '20rem']}
             mt={['12', '12', '16']}
           >
             <Heading as="h1" w="100%" mb="12" textAlign="left" fontSize="5xl">
               Checkout
             </Heading>
 
-            <Flex mb="12" alignItems="center">
-              <Box
-                p="0.5"
-                mr="4"
-                borderWidth="2px"
-                borderColor="gray.300"
-                borderRadius="full"
-              >
-                <Avatar maxWidth="3.5rem" maxHeight="3.5rem" name={'aa'} />
-              </Box>
-
-              <Box>
-                <Text as="strong" display="block" fontSize="lg">
-                  Product Name
-                </Text>
-
-                <Text as="span" fontSize="lg" color="gray.400">
-                  $10.3
-                </Text>
-              </Box>
-            </Flex>
+            <ProductInfos
+              name={product.name}
+              imageUrl={product.image_url}
+              price={product.price}
+            />
 
             <VStack as="form" w="100%">
-              <InputGroup>
-                <SimpleGrid
-                  w="100%"
-                  minChildWidth="24rem"
-                  mb="10"
-                  gap="6"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <Input name="card-name" label="name" error={undefined} />
-
-                  <Input
-                    name="card-number"
-                    type="number"
-                    label="card number"
-                    error={undefined}
-                  />
-
-                  <Input
-                    name="card-cvv"
-                    type="number"
-                    label="CVV"
-                    error={undefined}
-                  />
-
-                  <Flex w="100%" align="center" gap="2">
-                    <Input
-                      name="card-expiration-month"
-                      type="number"
-                      label="expiration month"
-                      error={undefined}
-                    />
-
-                    <Input
-                      name="card-expiration-year"
-                      type="number"
-                      label="expiration year"
-                      error={undefined}
-                    />
-                  </Flex>
-                </SimpleGrid>
-              </InputGroup>
+              <FormInputGroup />
 
               <Button
                 type="submit"
@@ -147,3 +90,23 @@ const ProductOrder: NextPage = () => {
 }
 
 export default ProductOrder
+
+export const getServerSideProps: GetServerSideProps<
+  ProductOrderProps
+> = async ({ params }) => {
+  try {
+    const { data: product } = await apiRoutes.get(`/products/${params?.slug}`)
+
+    return {
+      props: {
+        product
+      }
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error?.response?.status === 404) {
+      return { notFound: true }
+    }
+
+    throw error
+  }
+}

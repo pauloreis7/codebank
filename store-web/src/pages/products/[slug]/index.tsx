@@ -10,7 +10,7 @@ import { apiRoutes } from '../../../services/api'
 import { ProductInfos } from '../../../components/pages/productDetails/ProductInfos'
 import { BackButton } from '../../../components/BackButton'
 
-interface ProductDetailsProps {
+type ProductDetailsProps = {
   product: ProductProps
 }
 
@@ -21,7 +21,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
         <title>{`${product.name} | CodeBank`}</title>
-        <meta name="description" content="CodeBank Home" />
+        <meta name="description" content="CodeBank Product details" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -61,7 +61,11 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
               />
             </Box>
 
-            <ProductInfos price={product.price} slug={product.slug} />
+            <ProductInfos
+              name={product.name}
+              price={product.price}
+              slug={product.slug}
+            />
           </Flex>
         </Flex>
       </Flex>

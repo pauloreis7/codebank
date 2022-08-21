@@ -30,7 +30,7 @@ export function BackButton({ text, href }: BackButtonProps) {
       >
         <Icon as={FiArrowLeft} color="gray.300" />
 
-        <Text ml="4" fontWeight="medium">
+        <Text ml="3" fontWeight="medium">
           {text}
         </Text>
       </ChakraLink>
