@@ -1,16 +1,26 @@
-import type { NextPage } from 'next'
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import Head from 'next/head'
-import Link from 'next/link'
-import { Box, Flex, Heading, Image, Button } from '@chakra-ui/react'
+import { AxiosError } from 'axios'
+import { Box, Flex, Image } from '@chakra-ui/react'
 
+import { ProductProps } from '../../../types'
+import { apiRoutes } from '../../../services/api'
+
+import { ProductInfos } from '../../../components/pages/productDetails/ProductInfos'
 import { BackButton } from '../../../components/BackButton'
 
-const ProductDetails: NextPage = () => {
+interface ProductDetailsProps {
+  product: ProductProps
+}
+
+const ProductDetails: NextPage<ProductDetailsProps> = ({
+  product
+}: ProductDetailsProps) => {
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
-        <title>Home | CodeBank</title>
+        <title>{`${product.name} | CodeBank`}</title>
         <meta name="description" content="CodeBank Home" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -42,8 +52,8 @@ const ProductDetails: NextPage = () => {
           >
             <Box w="100%" h="100%" maxH="20rem">
               <Image
-                src="https://source.unsplash.com/random?product,"
-                alt={`{name} card image`}
+                src={product.image_url}
+                alt={`${product.name} card image`}
                 w="100%"
                 h="100%"
                 objectFit="cover"
@@ -51,56 +61,7 @@ const ProductDetails: NextPage = () => {
               />
             </Box>
 
-            <Flex
-              w="100%"
-              h="100%"
-              maxWidth="30rem"
-              flexDirection="column"
-              py="8"
-            >
-              <Heading as="h1" w="100%" mb="5" textAlign="left">
-                Product
-              </Heading>
-
-              <Heading
-                as="h2"
-                w="100%"
-                mb="5"
-                textAlign="left"
-                fontFamily="Inter"
-                fontSize="lg"
-                fontWeight="400"
-                color="gray.400"
-              >
-                $ 50.50
-              </Heading>
-
-              <Link
-                href="/products/[slug]/order"
-                as={`/products/{product.slug}/order`}
-                passHref
-              >
-                <Button
-                  as="a"
-                  w="100%"
-                  h="3.125rem"
-                  mt="auto"
-                  backgroundColor="yellow.500"
-                  borderRadius="md"
-                  border="0"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                  _hover={{
-                    backgroundColor: 'yellow.600'
-                  }}
-                  _focus={{
-                    backgroundColor: 'yellow.600'
-                  }}
-                >
-                  buy now
-                </Button>
-              </Link>
-            </Flex>
+            <ProductInfos price={product.price} slug={product.slug} />
           </Flex>
         </Flex>
       </Flex>
@@ -109,3 +70,31 @@ const ProductDetails: NextPage = () => {
 }
 
 export default ProductDetails
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  }
+}
+
+export const getStaticProps: GetStaticProps<ProductDetailsProps> = async ({
+  params
+}) => {
+  try {
+    const { data: product } = await apiRoutes.get(`/products/${params?.slug}`)
+
+    return {
+      props: {
+        product
+      },
+      revalidate: 1 * 60 * 60
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error?.response?.status === 404) {
+      return { notFound: true }
+    }
+
+    throw error
+  }
+}
