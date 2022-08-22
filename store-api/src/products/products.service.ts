@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { Product } from '@prisma/client'
+import { Product, Prisma } from '@prisma/client'
 
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
+
 import { PrismaService } from '../infra/prisma.service'
 
 @Injectable()
@@ -21,6 +22,10 @@ export class ProductsService {
     const product = await this.prisma.product.findUnique({
       where: { id }
     })
+
+    if (!product) {
+      throw new Prisma.NotFoundError('Product not found!')
+    }
 
     return product
   }
