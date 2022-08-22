@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Product, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
@@ -25,7 +25,7 @@ export class ProductsService {
     return products
   }
 
-  async findById(id: string): Promise<Product | null> {
+  async findById(id: string) {
     const product = await this.prisma.product.findUnique({
       where: { id }
     })

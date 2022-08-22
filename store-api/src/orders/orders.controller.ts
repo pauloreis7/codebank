@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  HttpCode
+} from '@nestjs/common'
 
 import { OrdersService } from './orders.service'
 import { CreateOrderDto } from './dto/create-order.dto'
@@ -7,18 +15,21 @@ import { CreateOrderDto } from './dto/create-order.dto'
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @HttpCode(201)
   @Post()
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto)
   }
 
   @Get()
-  findAllBy() {
-    return this.ordersService.findAll()
+  findAll(@Query('skip') skip = '0', @Query('take') take = '10') {
+    return this.ordersService.findAll(Number(skip), Number(take))
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id)
+    const order = this.ordersService.findById(id)
+
+    return order
   }
 }
