@@ -34,3 +34,13 @@ model Order {
 
   @@map("orders")
 }
+
+model OrderItems {
+  id         String @id @default(uuid())
+  quantity   Int
+  price      Float
+  product_id String
+  order_id   String
+
+  @@map("order_items")
+}
