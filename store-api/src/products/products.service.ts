@@ -10,12 +10,19 @@ import { PrismaService } from '../infra/prisma.service'
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product'
+  async create(createProductDto: CreateProductDto) {
+    await this.prisma.product.create({
+      data: { ...createProductDto }
+    })
   }
 
-  findAll() {
-    return `This action returns all products`
+  async findAll(skip: number, take: number) {
+    const products = await this.prisma.product.findMany({
+      skip,
+      take
+    })
+
+    return products
   }
 
   async findById(id: string): Promise<Product | null> {
@@ -30,11 +37,32 @@ export class ProductsService {
     return product
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.prisma.product.findUnique({
+      where: { id }
+    })
+
+    if (!product) {
+      throw new Prisma.NotFoundError('Product not found!')
+    }
+
+    await this.prisma.product.update({
+      where: { id },
+      data: { ...updateProductDto }
+    })
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} product`
+  async remove(id: string) {
+    const product = await this.prisma.product.findUnique({
+      where: { id }
+    })
+
+    if (!product) {
+      throw new Prisma.NotFoundError('Product not found!')
+    }
+
+    await this.prisma.product.delete({
+      where: { id }
+    })
   }
 }
