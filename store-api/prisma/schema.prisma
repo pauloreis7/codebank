@@ -18,19 +18,23 @@ model Product {
   price       Decimal
   created_at  DateTime @default(now())
 
+  OrderItems OrderItems[]
+
   @@map("products")
 }
 
 model Order {
   id                           String   @id @default(uuid())
   total                        Float
-  status                       String
+  status                       Status   @default(PENDING)
   credit_card_number           String
   credit_card_name             String
   credit_card_cvv              String
   credit_card_expiration_month Int
   credit_card_expiration_year  Int
   created_at                   DateTime @default(now())
+
+  OrderItems OrderItems[]
 
   @@map("orders")
 }
@@ -42,5 +46,13 @@ model OrderItems {
   product_id String
   order_id   String
 
+  product Product @relation(fields: [product_id], references: [id])
+  order   Order   @relation(fields: [order_id], references: [id])
+
   @@map("order_items")
+}
+
+enum Status {
+  APPROVED
+  PENDING
 }
