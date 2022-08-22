@@ -20,3 +20,17 @@ model Product {
 
   @@map("products")
 }
+
+model Order {
+  id                           String   @id @default(uuid())
+  total                        Float
+  status                       String
+  credit_card_number           String
+  credit_card_name             String
+  credit_card_cvv              String
+  credit_card_expiration_month Int
+  credit_card_expiration_year  Int
+  created_at                   DateTime @default(now())
+
+  @@map("orders")
+}
