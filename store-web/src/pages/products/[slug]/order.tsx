@@ -1,11 +1,15 @@
 import type { GetServerSideProps, NextPage } from 'next'
 
 import Head from 'next/head'
-import { Button, Flex, Heading, VStack } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { Button, Flex, Heading, useToast, VStack } from '@chakra-ui/react'
 import { AxiosError } from 'axios'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import { ProductProps } from '../../../types'
+import { OrderInputs, ProductProps } from '../../../types'
 import { apiRoutes } from '../../../services/api'
+import { orderFormSchema } from '../../../utils/products'
 
 import { BackButton } from '../../../components/BackButton'
 import { ProductInfos } from '../../../components/pages/ProductOrder/ProductInfos'
@@ -18,6 +22,41 @@ type ProductOrderProps = {
 const ProductOrder: NextPage<ProductOrderProps> = ({
   product
 }: ProductOrderProps) => {
+  const toast = useToast()
+  const router = useRouter()
+
+  const { register, handleSubmit, formState } = useForm<OrderInputs>({
+    resolver: yupResolver(orderFormSchema)
+  })
+  const { errors, isSubmitting } = formState
+
+  const onSubmit: SubmitHandler<OrderInputs> = async data => {
+    try {
+      console.log(data)
+
+      toast({
+        title: 'Successful purchase.',
+        status: 'success',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+
+      router.push('/')
+    } catch (err) {
+      const error = err as Error
+
+      toast({
+        title: 'Error in transaction order.',
+        description: error.message,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    }
+  }
+
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
@@ -37,6 +76,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
           maxWidth="68rem"
           py="8"
           px="6"
+          onSubmit={handleSubmit(onSubmit)}
         >
           <BackButton text="back" href={`/products/${product.slug}`} />
 
@@ -60,7 +100,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
             />
 
             <VStack as="form" w="100%">
-              <FormInputGroup />
+              <FormInputGroup register={register} errors={errors} />
 
               <Button
                 type="submit"
@@ -78,6 +118,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
                 _focus={{
                   backgroundColor: 'yellow.600'
                 }}
+                isLoading={isSubmitting}
               >
                 buy
               </Button>

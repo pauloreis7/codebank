@@ -1,3 +1,5 @@
+import * as yup from 'yup'
+
 import { ProductProps } from '../types'
 
 export const products: ProductProps[] = [
@@ -20,3 +22,13 @@ export const products: ProductProps[] = [
     created_at: '2021-06-06T00:00:00'
   }
 ]
+
+export const orderFormSchema = yup
+  .object({
+    name: yup.string().required('name required'),
+    number: yup.string().required('number required').min(16),
+    cvv: yup.string().required('cvv required').min(3),
+    expiration_month: yup.string().required('expiration_month required').min(2),
+    expiration_year: yup.string().required('expiration_year required').min(4)
+  })
+  .required()

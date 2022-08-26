@@ -7,3 +7,11 @@ export type ProductProps = {
   price: number
   created_at: string
 }
+
+export type OrderInputs = {
+  number: string
+  name: string
+  expiration_month: number
+  expiration_year: number
+  cvv: string
+}
