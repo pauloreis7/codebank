@@ -1,3 +1,36 @@
 {
-  "extends": "next/core-web-vitals"
-}
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@next/next/recommended",
+      "plugin:prettier/recommended",
+      "plugin:react/recommended",
+      "plugin:react/jsx-runtime",
+      "eslint:recommended",
+      "standard",
+      "prettier"
+    ],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "plugins": ["react", "@typescript-eslint", "prettier"],
+    "rules": {
+      "prettier/prettier": "error",
+      "space-before-function-paren": "off"
+    }
+  }
+  
