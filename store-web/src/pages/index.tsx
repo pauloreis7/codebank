@@ -20,7 +20,7 @@ const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex minHeight="100vh" flexDirection="column" alignItems="center">
+      <Flex flexDirection="column" alignItems="center">
         <Flex
           flexGrow="1"
           flexShrink="1"

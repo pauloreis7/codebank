@@ -26,7 +26,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex minHeight="100vh" flexDirection="column" alignItems="center">
+      <Flex flexDirection="column" alignItems="center">
         <Flex
           flexGrow="1"
           flexShrink="1"
@@ -47,7 +47,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
             flexShrink="1"
             flexBasis="0"
             flexDirection="column"
-            mt={['12', '12', '16']}
+            mt={['4', '4', '6']}
           >
             <Heading as="h1" w="100%" mb="12" textAlign="left" fontSize="5xl">
               Checkout

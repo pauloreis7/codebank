@@ -25,7 +25,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex minHeight="100vh" flexDirection="column" alignItems="center">
+      <Flex minHeight="90vh" flexDirection="column" alignItems="center">
         <Flex
           flexGrow="1"
           flexShrink="1"
