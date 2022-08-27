@@ -4,6 +4,7 @@ import { Prisma, Status } from '@prisma/client'
 import { CreateOrderDto } from './dto/create-order.dto'
 
 import { PrismaService } from '../infra/prisma.service'
+import { PaymentService } from './payment/payment.service'
 
 type FormattedItemProps = {
   quantity: number
@@ -14,7 +15,10 @@ type FormattedItemProps = {
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private paymentService: PaymentService
+  ) {}
 
   async create(createOrderDto: CreateOrderDto) {
     const orderItemsProductsIds = createOrderDto.items.map(
@@ -57,27 +61,47 @@ export class OrdersService {
 
     order.total = orderTotal
 
-    const createdOrder = await this.prisma.order.create({
-      data: { ...order }
-    })
+    try {
+      await this.prisma.$transaction(async prisma => {
+        const createdOrder = await prisma.order.create({
+          data: {
+            ...order,
+            OrderItems: { createMany: { data: formattedOrderItems } }
+          }
+        })
 
-    const formattedOrderItemsForCreate = createOrderDto.items.map(
-      (item: FormattedItemProps) => {
-        item.order_id = createdOrder.id
+        console.log('createdOrder ===>', createdOrder)
 
-        return item
-      }
-    )
+        await this.paymentService.payment({
+          creditCard: {
+            name: createdOrder.credit_card_name,
+            number: createdOrder.credit_card_number,
+            expirationMonth: createdOrder.credit_card_expiration_month,
+            expirationYear: createdOrder.credit_card_expiration_year,
+            cvv: createdOrder.credit_card_cvv
+          },
+          amount: order.total,
+          description: `Produtos: ${products.map(p => p.name).join(', ')}`,
+          store: process.env.STORE_NAME
+        })
 
-    await this.prisma.orderItems.createMany({
-      data: formattedOrderItemsForCreate
-    })
+        await prisma.order.update({
+          where: { id: createdOrder.id },
+          data: { status: Status.APPROVED }
+        })
+      })
+    } catch (error) {
+      console.log('error ===>', error)
+
+      throw error
+    }
   }
 
   async findAll(skip: number, take: number) {
     const orders = await this.prisma.order.findMany({
       skip,
-      take
+      take,
+      include: { OrderItems: true }
     })
 
     return orders

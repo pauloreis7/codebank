@@ -27,19 +27,19 @@ GRPC_HOST = getenv("GRPC_HOST")
 async def main():
     db_session = await setup_db_session()
 
-    credit_cards_infra = CreditCardsRepository(db_session)
-    get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(credit_cards_infra)
+    # credit_cards_infra = CreditCardsRepository(db_session)
+    # get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(credit_cards_infra)
 
-    get_transactions_by_card_number_controller = (
-        get_transactions_by_card_number_composer(db_session=db_session)
-    )
+    # get_transactions_by_card_number_controller = (
+    #     get_transactions_by_card_number_composer(db_session=db_session)
+    # )
 
-    credit_card_response = (
-        await get_credit_card_by_number_usecase.get_credit_card_by_number(
-            credit_card_number="123456"
-        )
-    )
-    print("credit_card_response ===>", credit_card_response)
+    # credit_card_response = (
+    #     await get_credit_card_by_number_usecase.get_credit_card_by_number(
+    #         credit_card_number="123456"
+    #     )
+    # )
+    # print("credit_card_response ===>", credit_card_response)
 
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
 
@@ -65,13 +65,13 @@ async def main():
 
         print("gRPC client received: ", response)
 
-    transactions_pagination_response = (
-        await get_transactions_by_card_number_controller.handle(
-            credit_card_number="123456"
-        )
-    )
+    # transactions_pagination_response = (
+    #     await get_transactions_by_card_number_controller.handle(
+    #         credit_card_number="123456"
+    #     )
+    # )
 
-    print("transactions_pagination_response ===>", transactions_pagination_response)
+    # print("transactions_pagination_response ===>", transactions_pagination_response)
 
     await db_session().close()
 

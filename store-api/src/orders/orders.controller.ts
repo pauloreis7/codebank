@@ -22,7 +22,7 @@ export class OrdersController {
   }
 
   @Get()
-  findAll(@Query('skip') skip = '0', @Query('take') take = '10') {
+  findAll(@Query('skip') skip = '0', @Query('take') take = '100') {
     return this.ordersService.findAll(Number(skip), Number(take))
   }
 
