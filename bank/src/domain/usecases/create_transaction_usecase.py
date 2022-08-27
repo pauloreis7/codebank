@@ -2,9 +2,11 @@ from typing import Type
 from os import getenv
 from dotenv import load_dotenv
 from json import dumps
+from grpc import StatusCode
 
 from src.domain.models.transaction import Transaction
 from src.domain.dtos.models.Transaction import TransactionCreateDto
+from src.errors.grpc_request_error import GrpcRequestError
 from src.domain.interfaces.repositories.credit_cards_repository import (
     CreditCardsRepositoryInterface,
 )
@@ -48,7 +50,9 @@ class CreateTransactionUsecase:
         )
 
         if check_credit_card_exists is None:
-            raise Exception(status_code=404, detail="Credit card not found")
+            raise GrpcRequestError(
+                code=StatusCode.NOT_FOUND, message="Credit card not found"
+            )
 
         transaction = Transaction()
 

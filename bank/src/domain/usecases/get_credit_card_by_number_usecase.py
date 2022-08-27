@@ -1,6 +1,8 @@
 from typing import Type
+from grpc import StatusCode
 
 from src.domain.models.credit_card import CreditCard
+from src.errors.grpc_request_error import GrpcRequestError
 from src.domain.interfaces.repositories.credit_cards_repository import (
     CreditCardsRepositoryInterface,
 )
@@ -26,6 +28,6 @@ class GetCreditCardByNumberUsecase:
         )
 
         if credit_card is None:
-            raise Exception(status_code=404, detail="Credit card not found")
+            raise GrpcRequestError(code=StatusCode.NOT_FOUND, message="Credit card not found")
 
         return credit_card

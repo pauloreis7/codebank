@@ -1,7 +1,9 @@
 from typing import Type
+from grpc import StatusCode
 
 from src.domain.models.credit_card import CreditCard
 from src.domain.dtos.models.CreditCard import CreditCardCreateDto
+from src.errors.grpc_request_error import GrpcRequestError
 from src.domain.interfaces.repositories.credit_cards_repository import (
     CreditCardsRepositoryInterface,
 )
@@ -39,7 +41,9 @@ class CreateCreditCardUsecase:
         )
 
         if check_credit_card_exists:
-            raise Exception(status_code=400, detail="Credit card already exists!")
+            raise GrpcRequestError(
+                code=StatusCode.ALREADY_EXISTS, message="Credit card already exists!"
+            )
 
         response = await self.__credit_cards_repository.create_credit_card(
             credit_card=credit_card

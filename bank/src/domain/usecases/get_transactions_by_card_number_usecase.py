@@ -1,6 +1,8 @@
 from typing import List, Type
+from grpc import StatusCode
 
 from src.domain.models.transaction import Transaction
+from src.errors.grpc_request_error import GrpcRequestError
 from src.domain.interfaces.repositories.transactions_repository import (
     TransactionsRepositoryInterface,
 )
@@ -38,7 +40,9 @@ class GetTransactionsByCardNumberUsecase:
         )
 
         if check_credit_card_exists is None:
-            raise Exception(status_code=404, detail="Credit card not found")
+            raise GrpcRequestError(
+                code=StatusCode.NOT_FOUND, message="Credit card not found"
+            )
 
         response = await self.__transactions_repository.get_transactions_by_card_id(
             credit_card_id=check_credit_card_exists.id,
