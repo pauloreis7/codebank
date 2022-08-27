@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 422 }))
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
-  await app.listen(3000)
+  await app.listen(3333)
 }
 
 bootstrap()

@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { Flex, Heading, SimpleGrid } from '@chakra-ui/react'
 
-import { apiRoutes } from '../services/api'
+import { api } from '../services/api'
 import { ProductProps } from '../types'
 
 import { Product } from '../components/pages/home/Product'
@@ -45,8 +45,8 @@ const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
           >
             {products.map(product => (
               <Product
-                key={product.slug}
-                slug={product.slug}
+                key={product.id}
+                slug={product.id}
                 name={product.name}
                 imageUrl={product.image_url}
               />
@@ -61,11 +61,21 @@ const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
 export default Home
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const { data: products } = await apiRoutes.get('products')
+  try {
+    const { data: products } = await api.get('products')
+
+    return {
+      props: {
+        products
+      }
+    }
+  } catch (error) {
+    console.log('error ===>', error)
+  }
 
   return {
     props: {
-      products
+      products: []
     }
   }
 }

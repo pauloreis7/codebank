@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { OrderInputs, ProductProps } from '../../../types'
-import { apiRoutes } from '../../../services/api'
+import { api } from '../../../services/api'
 import { orderFormSchema } from '../../../utils/products'
 
 import { BackButton } from '../../../components/BackButton'
@@ -28,11 +28,22 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
   const { register, handleSubmit, formState } = useForm<OrderInputs>({
     resolver: yupResolver(orderFormSchema)
   })
+
   const { errors, isSubmitting } = formState
+  const formattedPrice = `${product.price.d[0]},${product.price.d[1]}`.slice(
+    0,
+    5
+  )
 
   const onSubmit: SubmitHandler<OrderInputs> = async data => {
+    data.expiration_month = Number(data.expiration_month)
+    data.expiration_year = Number(data.expiration_year)
+
     try {
-      console.log(data)
+      await api.post('orders', {
+        credit_card: data,
+        items: [{ product_id: product.id, quantity: 1 }]
+      })
 
       toast({
         title: 'Successful purchase.',
@@ -45,6 +56,8 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
       router.push('/')
     } catch (err) {
       const error = err as Error
+
+      console.log(error)
 
       toast({
         title: 'Error in transaction order.',
@@ -78,7 +91,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
           px="6"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <BackButton text="back" href={`/products/${product.slug}`} />
+          <BackButton text="back" href={`/products/${product.id}`} />
 
           <Flex
             as="section"
@@ -96,7 +109,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
             <ProductInfos
               name={product.name}
               imageUrl={product.image_url}
-              price={product.price}
+              price={formattedPrice}
             />
 
             <VStack as="form" w="100%">
@@ -136,7 +149,7 @@ export const getServerSideProps: GetServerSideProps<
   ProductOrderProps
 > = async ({ params }) => {
   try {
-    const { data: product } = await apiRoutes.get(`/products/${params?.slug}`)
+    const { data: product } = await api.get(`products/${params?.slug}`)
 
     return {
       props: {

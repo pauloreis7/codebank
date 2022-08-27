@@ -3,8 +3,7 @@ export type ProductProps = {
   name: string
   description: string
   image_url: string
-  slug: string
-  price: number
+  price: { s: number; e: number; d: number[] }
   created_at: string
 }
 

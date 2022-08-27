@@ -4,7 +4,7 @@ import { Flex, Heading, Button } from '@chakra-ui/react'
 type ProductInfosProps = {
   name: string
   slug: string
-  price: number
+  price: string
 }
 
 export function ProductInfos({ name, price, slug }: ProductInfosProps) {

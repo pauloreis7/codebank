@@ -3,7 +3,7 @@ import { Avatar, Box, Flex, Text } from '@chakra-ui/react'
 type ProductInfosProps = {
   name: string
   imageUrl: string
-  price: number
+  price: string
 }
 
 export function ProductInfos({ name, imageUrl, price }: ProductInfosProps) {

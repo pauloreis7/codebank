@@ -5,7 +5,7 @@ import { AxiosError } from 'axios'
 import { Box, Flex, Image } from '@chakra-ui/react'
 
 import { ProductProps } from '../../../types'
-import { apiRoutes } from '../../../services/api'
+import { api } from '../../../services/api'
 
 import { ProductInfos } from '../../../components/pages/productDetails/ProductInfos'
 import { BackButton } from '../../../components/BackButton'
@@ -17,6 +17,11 @@ type ProductDetailsProps = {
 const ProductDetails: NextPage<ProductDetailsProps> = ({
   product
 }: ProductDetailsProps) => {
+  const formattedPrice = `${product.price.d[0]},${product.price.d[1]}`.slice(
+    0,
+    5
+  )
+
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
@@ -63,8 +68,8 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
 
             <ProductInfos
               name={product.name}
-              price={product.price}
-              slug={product.slug}
+              price={formattedPrice}
+              slug={product.id}
             />
           </Flex>
         </Flex>
@@ -86,7 +91,7 @@ export const getStaticProps: GetStaticProps<ProductDetailsProps> = async ({
   params
 }) => {
   try {
-    const { data: product } = await apiRoutes.get(`/products/${params?.slug}`)
+    const { data: product } = await api.get(`products/${params?.slug}`)
 
     return {
       props: {
