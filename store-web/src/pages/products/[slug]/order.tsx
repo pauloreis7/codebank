@@ -55,15 +55,15 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
 
       router.push('/')
     } catch (err) {
-      const error = err as Error
+      const error = err as AxiosError<{ message: string }>
 
       console.log(error)
 
       toast({
         title: 'Error in transaction order.',
-        description: error.message,
+        description: error.response?.data?.message ?? error.message,
         status: 'error',
-        duration: 6000,
+        duration: 5000,
         isClosable: true,
         position: 'top-right'
       })

@@ -3,6 +3,7 @@ from logging import basicConfig, INFO
 from grpc.aio import insecure_channel
 from os import getenv
 from dotenv import load_dotenv
+from src.domain.dtos.models.CreditCard import CreditCardCreateDto
 
 from src.infra.grpc.pb import payment_pb2_grpc
 from src.infra.grpc.pb import payment_pb2
@@ -14,6 +15,7 @@ from src.domain.usecases.get_credit_card_by_number_usecase import (
     GetCreditCardByNumberUsecase,
 )
 
+from src.main.composers.create_credit_card_composer import create_credit_card_composer
 from src.main.composers.get_transactions_by_card_number_composer import (
     get_transactions_by_card_number_composer,
 )
@@ -27,19 +29,32 @@ GRPC_HOST = getenv("GRPC_HOST")
 async def main():
     db_session = await setup_db_session()
 
-    # credit_cards_infra = CreditCardsRepository(db_session)
-    # get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(credit_cards_infra)
+    credit_cards_infra = CreditCardsRepository(db_session)
+    get_credit_card_by_number_usecase = GetCreditCardByNumberUsecase(credit_cards_infra)
 
-    # get_transactions_by_card_number_controller = (
-    #     get_transactions_by_card_number_composer(db_session=db_session)
-    # )
+    get_transactions_by_card_number_controller = (
+        get_transactions_by_card_number_composer(db_session=db_session)
+    )
+    create_credit_card_controller = create_credit_card_composer(db_session=db_session)
 
-    # credit_card_response = (
-    #     await get_credit_card_by_number_usecase.get_credit_card_by_number(
-    #         credit_card_number="123456"
-    #     )
-    # )
-    # print("credit_card_response ===>", credit_card_response)
+    await create_credit_card_controller.handle(
+        credit_card_dto=CreditCardCreateDto(
+            balance=0,
+            expiration_month=3,
+            expiration_year=2028,
+            limit=100000,
+            CVV=123,
+            name="PAULO SILVA DOS REIS",
+            number="1234567891234567",
+        )
+    )
+
+    credit_card_response = (
+        await get_credit_card_by_number_usecase.get_credit_card_by_number(
+            credit_card_number="1234567891234567"
+        )
+    )
+    print("credit_card_response ===>", credit_card_response)
 
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
 
@@ -65,13 +80,13 @@ async def main():
 
         print("gRPC client received: ", response)
 
-    # transactions_pagination_response = (
-    #     await get_transactions_by_card_number_controller.handle(
-    #         credit_card_number="123456"
-    #     )
-    # )
+    transactions_pagination_response = (
+        await get_transactions_by_card_number_controller.handle(
+            credit_card_number="1234567891234567"
+        )
+    )
 
-    # print("transactions_pagination_response ===>", transactions_pagination_response)
+    print("transactions_pagination_response ===>", transactions_pagination_response)
 
     await db_session().close()
 

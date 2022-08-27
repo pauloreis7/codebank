@@ -61,40 +61,32 @@ export class OrdersService {
 
     order.total = orderTotal
 
-    try {
-      await this.prisma.$transaction(async prisma => {
-        const createdOrder = await prisma.order.create({
-          data: {
-            ...order,
-            OrderItems: { createMany: { data: formattedOrderItems } }
-          }
-        })
-
-        console.log('createdOrder ===>', createdOrder)
-
-        await this.paymentService.payment({
-          creditCard: {
-            name: createdOrder.credit_card_name,
-            number: createdOrder.credit_card_number,
-            expirationMonth: createdOrder.credit_card_expiration_month,
-            expirationYear: createdOrder.credit_card_expiration_year,
-            cvv: createdOrder.credit_card_cvv
-          },
-          amount: order.total,
-          description: `Produtos: ${products.map(p => p.name).join(', ')}`,
-          store: process.env.STORE_NAME
-        })
-
-        await prisma.order.update({
-          where: { id: createdOrder.id },
-          data: { status: Status.APPROVED }
-        })
+    await this.prisma.$transaction(async prisma => {
+      const createdOrder = await prisma.order.create({
+        data: {
+          ...order,
+          OrderItems: { createMany: { data: formattedOrderItems } }
+        }
       })
-    } catch (error) {
-      console.log('error ===>', error)
 
-      throw error
-    }
+      await this.paymentService.payment({
+        creditCard: {
+          name: createdOrder.credit_card_name,
+          number: createdOrder.credit_card_number,
+          expirationMonth: createdOrder.credit_card_expiration_month,
+          expirationYear: createdOrder.credit_card_expiration_year,
+          cvv: createdOrder.credit_card_cvv
+        },
+        amount: order.total,
+        description: `Produtos: ${products.map(p => p.name).join(', ')}`,
+        store: process.env.STORE_NAME
+      })
+
+      await prisma.order.update({
+        where: { id: createdOrder.id },
+        data: { status: Status.APPROVED }
+      })
+    })
   }
 
   async findAll(skip: number, take: number) {
