@@ -1,29 +1,23 @@
 import { Injectable } from '@nestjs/common'
 
+import { PrismaService } from 'src/infra/prisma.service'
 import { CreateInvoiceDto } from './dto/create-invoice.dto'
-import { UpdateInvoiceDto } from './dto/update-invoice.dto'
 
 @Injectable()
 export class InvoicesService {
+  constructor(private prisma: PrismaService) {}
+
   create(createInvoiceDto: CreateInvoiceDto) {
     console.log(createInvoiceDto)
+
     return 'This action adds a new invoice'
   }
 
-  findAll() {
-    return `This action returns all invoices`
-  }
+  async findAll() {
+    const invoices = await this.prisma.creditCard.findUnique({
+      where: { id: '1' }
+    })
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`
-  }
-
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    console.log(updateInvoiceDto)
-    return `This action updates a #${id} invoice`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} invoice`
+    return invoices
   }
 }
