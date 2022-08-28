@@ -14,6 +14,6 @@ export class CreditCardsController {
 
   @Get()
   findAll() {
-    return this.creditCardService.findAll()
+    return this.creditCardService.findAllByCreditCard()
   }
 }

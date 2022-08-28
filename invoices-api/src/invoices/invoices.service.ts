@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 
 import { PrismaService } from 'src/infra/prisma.service'
 import { CreateInvoiceDto } from './dto/create-invoice.dto'
@@ -7,10 +8,25 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto'
 export class InvoicesService {
   constructor(private prisma: PrismaService) {}
 
-  create(createInvoiceDto: CreateInvoiceDto) {
-    console.log(createInvoiceDto)
+  async create(createInvoiceDto: CreateInvoiceDto) {
+    const creditCard = await this.prisma.creditCard.findUnique({
+      where: { number: createInvoiceDto.credit_card_number }
+    })
 
-    return 'This action adds a new invoice'
+    if (!creditCard) {
+      throw new Prisma.NotFoundError('Credit card not found!')
+    }
+
+    await this.prisma.invoice.create({
+      data: {
+        credit_card_id: creditCard.id,
+        transaction_id: createInvoiceDto.transaction_id,
+        amount: createInvoiceDto.amount,
+        description: createInvoiceDto.description,
+        payment_date: createInvoiceDto.payment_date,
+        store: createInvoiceDto.store
+      }
+    })
   }
 
   async findAll() {

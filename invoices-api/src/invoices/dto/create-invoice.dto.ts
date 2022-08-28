@@ -1,16 +1,23 @@
+import { Type } from 'class-transformer'
 import {
   IsISO8601,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
   MaxLength,
-  Min
+  Min,
+  ValidateNested
 } from 'class-validator'
 
 export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   credit_card_number: string
+
+  @IsString()
+  @IsNotEmpty()
+  transaction_id: string
 
   @Min(0)
   @IsNumber()
@@ -29,4 +36,12 @@ export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   description: string
+}
+
+export class KafkaCreateInvoiceDto {
+  @Type(() => CreateInvoiceDto)
+  @ValidateNested()
+  @IsObject()
+  @IsNotEmpty()
+  value: CreateInvoiceDto
 }

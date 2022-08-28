@@ -7,13 +7,13 @@ import { CreateCreditCardDto } from './dto/create-credit-card.dto'
 export class CreditCardsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createCreditCardDto: CreateCreditCardDto) {
-    console.log(createCreditCardDto)
-
-    return 'This action adds a new credit card'
+  async create(createCreditCardDto: CreateCreditCardDto) {
+    await this.prisma.creditCard.create({
+      data: createCreditCardDto
+    })
   }
 
-  findAll() {
+  async findAllByCreditCard() {
     return 'This action find all credit cards'
   }
 }
