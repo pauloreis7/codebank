@@ -20,7 +20,7 @@ const Login: NextPage = () => {
 
     setIsLoading(true)
 
-    router.push(`invoices/slug`)
+    router.push(`invoices/${cardNumber}`)
   }
 
   return (
