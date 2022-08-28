@@ -13,5 +13,22 @@ model CreditCard {
   number     String   @unique
   created_at DateTime @default(now())
 
+  Invoice Invoice[]
+
   @@map("credit_cards")
+}
+
+model Invoice {
+  id             String   @id @default(uuid())
+  amount         Float
+  credit_card_id String
+  transaction_id String
+  store          String
+  description    String
+  payment_date   DateTime
+  created_at     DateTime @default(now())
+
+  credit_card CreditCard @relation(fields: [credit_card_id], references: [id])
+
+  @@map("invoices")
 }

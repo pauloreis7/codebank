@@ -14,10 +14,6 @@ export class InvoicesService {
   }
 
   async findAll() {
-    const invoices = await this.prisma.creditCard.findUnique({
-      where: { id: '1' }
-    })
-
-    return invoices
+    return 'This action find all invoices'
   }
 }
