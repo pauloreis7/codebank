@@ -1,24 +1,34 @@
 import Link from 'next/link'
-import { Flex, Heading, Button } from '@chakra-ui/react'
+import { Flex, Heading, Button, Text } from '@chakra-ui/react'
 
 type ProductInfosProps = {
   name: string
   slug: string
   price: string
+  description: string
 }
 
-export function ProductInfos({ name, price, slug }: ProductInfosProps) {
+export function ProductInfos({
+  name,
+  description,
+  price,
+  slug
+}: ProductInfosProps) {
   return (
     <Flex w="100%" h="100%" maxWidth="30rem" flexDirection="column" py="8">
       <Heading
         as="h1"
         w="100%"
-        mb="5"
+        mb="2"
         textAlign="left"
         textTransform="capitalize"
       >
         {name}
       </Heading>
+
+      <Text mb="5" color="gray.500">
+        {description}
+      </Text>
 
       <Heading
         as="h2"
@@ -26,9 +36,9 @@ export function ProductInfos({ name, price, slug }: ProductInfosProps) {
         mb="5"
         textAlign="left"
         fontFamily="Inter"
-        fontSize="lg"
-        fontWeight="400"
-        color="gray.400"
+        fontSize="3xl"
+        fontWeight="700"
+        color="gray.300"
       >
         $ {price}
       </Heading>

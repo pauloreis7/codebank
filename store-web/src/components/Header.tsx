@@ -3,10 +3,10 @@ import { BiStore } from 'react-icons/bi'
 import Link from 'next/link'
 
 type HeaderProps = {
-  href: string
+  href?: string
 }
 
-export function Header({ href }: HeaderProps) {
+export function Header({ href = '/' }: HeaderProps) {
   return (
     <Flex
       as="header"

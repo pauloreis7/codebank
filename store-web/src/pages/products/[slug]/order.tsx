@@ -12,8 +12,8 @@ import { api } from '../../../services/api'
 import { orderFormSchema } from '../../../utils/products'
 
 import { BackButton } from '../../../components/BackButton'
-import { ProductInfos } from '../../../components/pages/ProductOrder/ProductInfos'
-import { FormInputGroup } from '../../../components/pages/ProductOrder/FormInputGroup'
+import { ProductInfos } from '../../../components/pages/productOrder/ProductInfos'
+import { FormInputGroup } from '../../../components/pages/productOrder/FormInputGroup'
 
 type ProductOrderProps = {
   product: ProductProps
@@ -57,7 +57,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
     } catch (err) {
       const error = err as AxiosError<{ message: string }>
 
-      console.log(error)
+      console.error(error)
 
       toast({
         title: 'Error in transaction order.',
@@ -112,7 +112,7 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
               price={formattedPrice}
             />
 
-            <VStack as="form" w="100%">
+            <VStack as="form" w="100%" mt={['6', '12']}>
               <FormInputGroup register={register} errors={errors} />
 
               <Button

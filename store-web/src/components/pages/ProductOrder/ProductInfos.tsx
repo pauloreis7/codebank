@@ -8,7 +8,7 @@ type ProductInfosProps = {
 
 export function ProductInfos({ name, imageUrl, price }: ProductInfosProps) {
   return (
-    <Flex mb={['6', '12']} alignItems="center">
+    <Flex alignItems="center">
       <Box
         p="0.5"
         mr="4"

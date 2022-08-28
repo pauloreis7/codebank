@@ -68,6 +68,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
 
             <ProductInfos
               name={product.name}
+              description={product.description}
               price={formattedPrice}
               slug={product.id}
             />
