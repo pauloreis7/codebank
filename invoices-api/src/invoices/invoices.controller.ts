@@ -1,4 +1,4 @@
-import { Controller, Get, ValidationPipe } from '@nestjs/common'
+import { Controller, Get, Param, ValidationPipe } from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 
 import { InvoicesService } from './invoices.service'
@@ -16,8 +16,10 @@ export class InvoicesController {
     return this.invoicesService.create(message.value)
   }
 
-  @Get()
-  findAll() {
-    return this.invoicesService.findAll()
+  @Get(':card_number')
+  findAllByCardNumber(@Param('card_number') cardNumber: string) {
+    const invoices = this.invoicesService.findAllByCardNumber(cardNumber)
+
+    return invoices
   }
 }

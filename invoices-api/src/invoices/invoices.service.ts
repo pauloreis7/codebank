@@ -29,7 +29,19 @@ export class InvoicesService {
     })
   }
 
-  async findAll() {
-    return 'This action find all invoices'
+  async findAllByCardNumber(cardNumber: string) {
+    const creditCard = await this.prisma.creditCard.findUnique({
+      where: { number: cardNumber }
+    })
+
+    if (!creditCard) {
+      throw new Prisma.NotFoundError('Credit card not found!')
+    }
+
+    const invoices = await this.prisma.invoice.findMany({
+      where: { credit_card_id: creditCard.id }
+    })
+
+    return invoices
   }
 }

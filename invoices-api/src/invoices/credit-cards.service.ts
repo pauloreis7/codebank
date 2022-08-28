@@ -13,7 +13,11 @@ export class CreditCardsService {
     })
   }
 
-  async findAllByCreditCard() {
-    return 'This action find all credit cards'
+  async findByCreditCardNumber(cardNumber: string) {
+    const creditCard = await this.prisma.creditCard.findUnique({
+      where: { number: cardNumber }
+    })
+
+    return creditCard
   }
 }

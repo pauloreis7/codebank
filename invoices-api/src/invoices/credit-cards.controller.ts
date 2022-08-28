@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common'
+import { Controller, Get, Post, Body, Param } from '@nestjs/common'
 
 import { CreditCardsService } from './credit-cards.service'
 import { CreateCreditCardDto } from './dto/create-credit-card.dto'
@@ -12,8 +12,10 @@ export class CreditCardsController {
     return this.creditCardService.create(createCreditCardDto)
   }
 
-  @Get()
-  findAll() {
-    return this.creditCardService.findAllByCreditCard()
+  @Get(':card_number')
+  findOne(@Param('card_number') cardNumber: string) {
+    const creditCard = this.creditCardService.findByCreditCardNumber(cardNumber)
+
+    return creditCard
   }
 }
