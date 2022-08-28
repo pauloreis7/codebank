@@ -1,18 +1,26 @@
-import type { NextPage } from 'next'
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import Head from 'next/head'
+import { AxiosError } from 'axios'
 import { Badge, Box, Divider, Flex, Heading, Image } from '@chakra-ui/react'
 
+import { api } from '../../services/api'
+import { getOrderResponse, OrderProps } from '../../types'
 import { ProductInfos } from '../../components/pages/productOrder/ProductInfos'
 import { BackButton } from '../../components/BackButton'
 import { CreditCardDetails } from '../../components/pages/productInvoice/CreditCardDetails'
 import { InvoiceLink } from '../../components/pages/productInvoice/InvoiceLink'
 
-const Order: NextPage = () => {
+const Order: NextPage<OrderProps> = ({
+  orderId,
+  total,
+  creditCard,
+  product
+}: OrderProps) => {
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
-        <title>{`Order | CodeBank`}</title>
+        <title>Order | CodeBank</title>
         <meta name="description" content="CodeBank Order details" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -44,8 +52,8 @@ const Order: NextPage = () => {
           >
             <Box w="100%" h="100%" maxH="20rem">
               <Image
-                src="https://source.unsplash.com/random?product,10"
-                alt={`{product.name} card image`}
+                src={product.imageUrl}
+                alt={`${product.name} card image`}
                 w="100%"
                 h="100%"
                 objectFit="cover"
@@ -67,13 +75,13 @@ const Order: NextPage = () => {
                 textAlign="left"
                 textTransform="capitalize"
               >
-                Order - #15162627182
+                Order - #{orderId.slice(0, 10)}...
               </Heading>
 
               <ProductInfos
-                name={'product.name'}
-                imageUrl={'product.image_url'}
-                price={'formattedPrice'}
+                name={product.name}
+                imageUrl={product.imageUrl}
+                price={total}
               />
 
               <InvoiceLink orderId="123456" />
@@ -81,9 +89,9 @@ const Order: NextPage = () => {
               <Divider mt="2" mb="6" borderColor="gray.600" />
 
               <CreditCardDetails
-                creditCardNumber="1234567891234567"
-                expirationMonth="04"
-                expirationYear="2027"
+                creditCardNumber={creditCard.number}
+                expirationMonth={creditCard.expiration_month}
+                expirationYear={creditCard.expiration_year}
               />
             </Flex>
           </Flex>
@@ -94,3 +102,38 @@ const Order: NextPage = () => {
 }
 
 export default Order
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps<OrderProps> = async ({
+  params
+}) => {
+  try {
+    const { data } = await api.get<getOrderResponse>(`orders/${params?.id}`)
+
+    return {
+      props: {
+        orderId: data.order.id,
+        total: String(data.order.total),
+        creditCard: {
+          number: data.order.credit_card_number,
+          expiration_month: String(data.order.credit_card_expiration_month),
+          expiration_year: String(data.order.credit_card_expiration_year)
+        },
+        product: {
+          name: data.product.name,
+          imageUrl: data.product.image_url
+        }
+      },
+      revalidate: 1 * 60 * 30
+    }
+  } catch (error) {
+    if (error instanceof AxiosError && error?.response?.status === 404) {
+      return { notFound: true }
+    }
+
+    throw error
+  }
+}

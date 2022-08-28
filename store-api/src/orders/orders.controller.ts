@@ -28,8 +28,6 @@ export class OrdersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    const order = this.ordersService.findById(id)
-
-    return order
+    return this.ordersService.findById(id)
   }
 }

@@ -61,7 +61,7 @@ export class OrdersService {
 
     order.total = orderTotal
 
-    await this.prisma.$transaction(async prisma => {
+    const orderId = await this.prisma.$transaction(async prisma => {
       const createdOrder = await prisma.order.create({
         data: {
           ...order,
@@ -82,11 +82,15 @@ export class OrdersService {
         store: process.env.STORE_NAME
       })
 
-      await prisma.order.update({
+      const updatedOrder = await prisma.order.update({
         where: { id: createdOrder.id },
         data: { status: Status.APPROVED }
       })
+
+      return updatedOrder.id
     })
+
+    return { orderId }
   }
 
   async findAll(skip: number, take: number) {
@@ -101,13 +105,21 @@ export class OrdersService {
 
   async findById(id: string) {
     const order = await this.prisma.order.findUnique({
-      where: { id }
+      where: { id },
+      include: { OrderItems: true }
     })
 
     if (!order) {
       throw new Prisma.NotFoundError('Order not found!')
     }
 
-    return order
+    order.credit_card_number =
+      '************' + order.credit_card_number.substr(-4)
+
+    const product = await this.prisma.product.findUnique({
+      where: { id: order.OrderItems[0].product_id }
+    })
+
+    return { order, product }
   }
 }

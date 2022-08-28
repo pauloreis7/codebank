@@ -40,20 +40,23 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
     data.expiration_year = Number(data.expiration_year)
 
     try {
-      await api.post('orders', {
-        credit_card: data,
-        items: [{ product_id: product.id, quantity: 1 }]
-      })
+      const { data: orderData } = await api.post<{ orderId: string }>(
+        'orders',
+        {
+          credit_card: data,
+          items: [{ product_id: product.id, quantity: 1 }]
+        }
+      )
 
       toast({
         title: 'Successful purchase.',
         status: 'success',
-        duration: 6000,
+        duration: 5000,
         isClosable: true,
         position: 'top-right'
       })
 
-      router.push('/')
+      router.push(`../../orders/${orderData.orderId}`)
     } catch (err) {
       const error = err as AxiosError<{ message: string }>
 

@@ -14,3 +14,31 @@ export type OrderInputs = {
   expiration_year: number
   cvv: string
 }
+
+export type OrderProps = {
+  orderId: string
+  total: string
+  creditCard: {
+    number: string
+    expiration_month: string
+    expiration_year: string
+  }
+  product: {
+    name: string
+    imageUrl: string
+  }
+}
+
+export type getOrderResponse = {
+  order: {
+    id: string
+    total: number
+    credit_card_number: string
+    credit_card_expiration_month: number
+    credit_card_expiration_year: number
+  }
+  product: {
+    image_url: string
+    name: string
+  }
+}
