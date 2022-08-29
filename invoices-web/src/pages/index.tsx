@@ -101,7 +101,7 @@ const Login: NextPage = () => {
                   _active={{
                     backgroundColor: 'yellow.600'
                   }}
-                  disabled={cardNumber.length !== 16}
+                  disabled={cardNumber.length !== 16 || isLoading}
                   isLoading={isLoading}
                 >
                   Login

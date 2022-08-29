@@ -9,6 +9,8 @@ type GetInvoicesResponse = {
 
 type GetInvoicesApiResponse = InvoiceProps[]
 
+const REFETCH_INTERVAL = 1000 * 10 // 10 seconds
+
 async function getInvoices(
   creditCardNumber?: string
 ): Promise<GetInvoicesResponse | null> {
@@ -23,12 +25,18 @@ async function getInvoices(
   return { invoices }
 }
 
-export function useInvoices(creditCardNumber?: string) {
+export function useInvoices(
+  creditCardNumber: string,
+  initialInvoicesData: InvoiceProps[]
+) {
   return useQuery(
     ['invoices', creditCardNumber],
     () => getInvoices(creditCardNumber),
     {
-      staleTime: 1000 * 15 // 15 seconds,
+      staleTime: REFETCH_INTERVAL,
+      refetchInterval: REFETCH_INTERVAL,
+      enabled: creditCardNumber?.length === 16,
+      initialData: { invoices: initialInvoicesData }
     }
   )
 }

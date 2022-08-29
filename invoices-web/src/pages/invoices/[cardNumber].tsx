@@ -1,19 +1,29 @@
-import type { NextPage } from 'next'
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import axios, { AxiosError } from 'axios'
 import { Flex, Heading, Spinner, VStack } from '@chakra-ui/react'
 
+import { InvoiceProps } from '../../types'
+import { api } from '../../services/api'
 import { useInvoices } from '../../hooks/useInvoices'
+
 import { Header } from '../../components/Header'
 import { BackButton } from '../../components/BackButton'
+import { InvoicesErrorState } from '../../components/InvoicesErrorState'
 import { Invoice } from '../../components/Invoice'
 
-const Invoices: NextPage = () => {
+type InvoicesProps = {
+  invoices: InvoiceProps[]
+}
+
+const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
   const router = useRouter()
 
   const { data, isLoading, isFetching, error } = useInvoices(
-    String(router.query.cardNumber)
+    String(router.query.cardNumber),
+    invoices
   )
 
   return (
@@ -71,9 +81,7 @@ const Invoices: NextPage = () => {
 
           <VStack w="100%" gap="8" alignItems="center" justifyContent="center">
             {error ? (
-              <Flex justifyContent="center">
-                <Heading>Error to get invoices :/</Heading>
-              </Flex>
+              <InvoicesErrorState error={error as AxiosError<string>} />
             ) : (
               !isLoading &&
               data?.invoices.map(invoice => (
@@ -95,3 +103,28 @@ const Invoices: NextPage = () => {
 }
 
 export default Invoices
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return { paths: [], fallback: 'blocking' }
+}
+
+export const getStaticProps: GetStaticProps<InvoicesProps> = async ({
+  params
+}) => {
+  try {
+    const { data: invoices } = await api.get(`invoices/${params?.cardNumber}`)
+
+    return {
+      props: {
+        invoices
+      },
+      revalidate: 1 * 60 // 60 seconds
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return { notFound: true }
+    }
+
+    throw error
+  }
+}
