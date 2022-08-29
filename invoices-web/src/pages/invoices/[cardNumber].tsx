@@ -1,25 +1,20 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 
 import Head from 'next/head'
-import { useState } from 'react'
-import axios from 'axios'
-import { Flex, Heading, VStack } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { Flex, Heading, Spinner, VStack } from '@chakra-ui/react'
 
-import { InvoiceProps } from '../../types'
-
+import { useInvoices } from '../../hooks/useInvoices'
 import { Header } from '../../components/Header'
 import { BackButton } from '../../components/BackButton'
 import { Invoice } from '../../components/Invoice'
-import { api } from '../../services/api'
 
-type InvoicesProps = {
-  invoices: InvoiceProps[]
-}
+const Invoices: NextPage = () => {
+  const router = useRouter()
 
-const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
-  const [invoicesList, setInvoicesList] = useState<InvoiceProps[]>(invoices)
-
-  console.log(setInvoicesList)
+  const { data, isLoading, isFetching, error } = useInvoices(
+    String(router.query.cardNumber)
+  )
 
   return (
     <Flex
@@ -57,21 +52,41 @@ const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
           maxWidth="62.5rem"
           p="8"
         >
-          <Heading as="h1" w="100%" textAlign="left" mb="8" color="yellow.500">
-            Invoices
-          </Heading>
+          <Flex
+            w="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            mb="8"
+          >
+            <Heading as="h1" w="100%" textAlign="left" color="yellow.500">
+              Invoices
+            </Heading>
+
+            {(isFetching || isLoading) && (
+              <Flex alignItems="center" color="gray.500">
+                <Spinner size="sm" mr="2" /> Fetching
+              </Flex>
+            )}
+          </Flex>
 
           <VStack w="100%" gap="8" alignItems="center" justifyContent="center">
-            {invoicesList.map(invoice => (
-              <Invoice
-                key={invoice.transactionId}
-                transactionId={invoice.transactionId}
-                amount={invoice.amount}
-                store={invoice.store}
-                description={invoice.description}
-                paymentDate={invoice.paymentDate}
-              />
-            ))}
+            {error ? (
+              <Flex justifyContent="center">
+                <Heading>Error to get invoices :/</Heading>
+              </Flex>
+            ) : (
+              !isLoading &&
+              data?.invoices.map(invoice => (
+                <Invoice
+                  key={invoice.transactionId}
+                  transactionId={invoice.transactionId}
+                  amount={invoice.amount}
+                  store={invoice.store}
+                  description={invoice.description}
+                  paymentDate={invoice.paymentDate}
+                />
+              ))
+            )}
           </VStack>
         </Flex>
       </Flex>
@@ -80,28 +95,3 @@ const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
 }
 
 export default Invoices
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: 'blocking' }
-}
-
-export const getStaticProps: GetStaticProps<InvoicesProps> = async ({
-  params
-}) => {
-  try {
-    const { data: invoices } = await api.get(`invoices/${params?.cardNumber}`)
-
-    return {
-      props: {
-        invoices
-      },
-      revalidate: 1 * 60 // 60 seconds
-    }
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return { notFound: true }
-    }
-
-    throw error
-  }
-}
