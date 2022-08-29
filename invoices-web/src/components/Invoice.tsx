@@ -1,12 +1,6 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 
-type InvoiceProps = {
-  paymentDate: string
-  transactionId: string
-  amount: number
-  store: string
-  description: string
-}
+import { InvoiceProps } from '../types'
 
 export function Invoice({
   paymentDate,
@@ -31,7 +25,13 @@ export function Invoice({
         })}
       </Text>
 
-      <Flex w="100%" alignItems="center" justifyContent="space-between" mb="3">
+      <Flex
+        w="100%"
+        flexDirection={['column', 'column', 'row']}
+        alignItems={['flex-start', 'flex-start', 'center']}
+        justifyContent="space-between"
+        mb="3"
+      >
         <Heading as="strong" mr="2">
           Transac. - #{transactionId.slice(0, 16)}...
         </Heading>
