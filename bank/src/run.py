@@ -62,10 +62,10 @@ async def main():
         stub = payment_pb2_grpc.PaymentServiceStub(channel)
 
         credit_card = {
-            "name": "Jonh Doe",
-            "number": "123456",
+            "name": "PAULO SILVA DOS REIS",
+            "number": "1234567891234567",
             "expirationMonth": 8,
-            "expirationYear": 2024,
+            "expirationYear": 2026,
             "cvv": 123,
         }
 
@@ -73,7 +73,7 @@ async def main():
             request=payment_pb2.PaymentRequest(
                 creditCard=credit_card,
                 amount=10,
-                store="SomeStore02",
+                store="CodeStore",
                 description="Example desc...",
             )
         )

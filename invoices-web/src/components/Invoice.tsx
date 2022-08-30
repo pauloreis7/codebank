@@ -1,6 +1,12 @@
 import { Flex, Heading, Text } from '@chakra-ui/react'
 
-import { InvoiceProps } from '../types'
+type InvoiceProps = {
+  paymentDate: string
+  transactionId: string
+  amount: number
+  store: string
+  description: string
+}
 
 export function Invoice({
   paymentDate,

@@ -13,20 +13,16 @@ import {
 export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
-  credit_card_number: string
+  transaction_id: string
 
   @IsString()
   @IsNotEmpty()
-  transaction_id: string
+  credit_card_number: string
 
   @Min(0)
   @IsNumber()
   @IsNotEmpty()
   amount: number
-
-  @IsISO8601()
-  @IsNotEmpty()
-  payment_date: Date
 
   @MaxLength(255)
   @IsString()
@@ -36,6 +32,11 @@ export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   description: string
+
+  @MaxLength(255)
+  @IsISO8601()
+  @IsNotEmpty()
+  payment_date: string
 }
 
 export class KafkaCreateInvoiceDto {

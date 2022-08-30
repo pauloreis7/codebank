@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import axios, { AxiosError } from 'axios'
 import { Flex, Heading, Spinner, VStack } from '@chakra-ui/react'
 
-import { InvoiceProps } from '../../types'
+import { GetInvoicesResponse, InvoiceProps } from '../../types'
 import { api } from '../../services/api'
 import { useInvoices } from '../../hooks/useInvoices'
 
@@ -86,12 +86,12 @@ const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
               !isLoading &&
               data?.invoices.map(invoice => (
                 <Invoice
-                  key={invoice.transactionId}
-                  transactionId={invoice.transactionId}
+                  key={invoice.transaction_id}
+                  transactionId={invoice.transaction_id}
                   amount={invoice.amount}
                   store={invoice.store}
                   description={invoice.description}
-                  paymentDate={invoice.paymentDate}
+                  paymentDate={invoice.payment_date}
                 />
               ))
             )}
@@ -112,7 +112,9 @@ export const getStaticProps: GetStaticProps<InvoicesProps> = async ({
   params
 }) => {
   try {
-    const { data: invoices } = await api.get(`invoices/${params?.cardNumber}`)
+    const { data: invoices } = await api.get<GetInvoicesResponse[]>(
+      `invoices/${params?.cardNumber}`
+    )
 
     return {
       props: {

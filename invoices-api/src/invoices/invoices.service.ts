@@ -23,7 +23,7 @@ export class InvoicesService {
         transaction_id: createInvoiceDto.transaction_id,
         amount: createInvoiceDto.amount,
         description: createInvoiceDto.description,
-        payment_date: createInvoiceDto.payment_date,
+        payment_date: new Date(createInvoiceDto.payment_date),
         store: createInvoiceDto.store
       }
     })

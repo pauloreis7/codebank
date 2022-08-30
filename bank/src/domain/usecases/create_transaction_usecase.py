@@ -84,9 +84,9 @@ class CreateTransactionUsecase:
 
         transaction_message = {
             "transaction_id": str(transaction.id),
-            "credit_card_number ": check_credit_card_exists.number,
+            "credit_card_number": check_credit_card_exists.number,
             "amount": transaction.amount,
-            "store ": transaction.store,
+            "store": transaction.store,
             "description": transaction.description,
             "payment_date": str(transaction.created_at),
         }

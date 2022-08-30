@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, HttpException } from '@nestjs/common'
 import { Prisma, Status } from '@prisma/client'
 
 import { CreateOrderDto } from './dto/create-order.dto'
@@ -24,6 +24,13 @@ export class OrdersService {
     const orderItemsProductsIds = createOrderDto.items.map(
       item => item.product_id
     )
+
+    if (
+      createOrderDto.credit_card.expiration_year <= new Date().getFullYear() &&
+      createOrderDto.credit_card.expiration_month < new Date().getMonth() + 1
+    ) {
+      throw new HttpException('Invalid credit card expiration month', 422)
+    }
 
     const products = await this.prisma.product.findMany({
       where: {

@@ -7,6 +7,7 @@ import {
   IsObject,
   IsString,
   IsUUID,
+  Max,
   MaxLength,
   Min,
   MinLength,
@@ -27,7 +28,8 @@ class CreditCardDto {
   @IsNotEmpty()
   name: string
 
-  @MinCallback(() => new Date().getMonth() + 1)
+  @Max(12)
+  @Min(1)
   @IsInt()
   @IsNotEmpty()
   expiration_month: number
