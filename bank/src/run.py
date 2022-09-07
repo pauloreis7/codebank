@@ -7,6 +7,8 @@ from src.domain.dtos.models.CreditCard import CreditCardCreateDto
 
 from src.infra.grpc.pb import payment_pb2_grpc
 from src.infra.grpc.pb import payment_pb2
+from src.infra.grpc.pb import credit_card_pb2_grpc
+from src.infra.grpc.pb import credit_card_pb2
 
 from src.infra.config.db_connection import setup_db_session
 from src.infra.repositories.credit_cards_repository import CreditCardsRepository
@@ -37,48 +39,48 @@ async def main():
     )
     create_credit_card_controller = create_credit_card_composer(db_session=db_session)
 
-    # await create_credit_card_controller.handle(
-    #     credit_card_dto=CreditCardCreateDto(
-    #         balance=0,
-    #         expiration_month=3,
-    #         expiration_year=2028,
-    #         limit=100000,
-    #         CVV=123,
-    #         name="PAULO SILVA DOS REIS",
-    #         number="1234567891234567",
-    #     )
-    # )
+    await create_credit_card_controller.handle(
+        credit_card_dto=CreditCardCreateDto(name="Paulo Silva dos Reis")
+    )
 
     credit_card_response = (
         await get_credit_card_by_number_usecase.get_credit_card_by_number(
-            credit_card_number="1234567891234567"
+            credit_card_number="9358609820128933"
         )
     )
     print("credit_card_response ===>", credit_card_response)
 
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
 
-    # async with insecure_channel(grpc_target) as channel:
-    #     stub = payment_pb2_grpc.PaymentServiceStub(channel)
+    async with insecure_channel(grpc_target) as channel:
+        stub_payment = payment_pb2_grpc.PaymentServiceStub(channel)
+        stub_create_credit_card = credit_card_pb2_grpc.CreateCreditCardServiceStub(
+            channel
+        )
 
-    #     credit_card = {
-    #         "name": "PAULO SILVA DOS REIS",
-    #         "number": "1234567891234567",
-    #         "expirationMonth": 8,
-    #         "expirationYear": 2026,
-    #         "cvv": 123,
-    #     }
+        credit_card = {
+            "name": "PAULO SILVA DOS REIS",
+            "number": "1234567891234567",
+            "expirationMonth": 8,
+            "expirationYear": 2026,
+            "cvv": 123,
+        }
 
-    #     response = await stub.Payment(
-    #         request=payment_pb2.PaymentRequest(
-    #             creditCard=credit_card,
-    #             amount=10,
-    #             store="CodeStore",
-    #             description="Example desc...",
-    #         )
-    #     )
+        response_create_credit_card = await stub_create_credit_card.CreateCreditCard(
+            request=credit_card_pb2.CreateCreditCardRequest(name="paulo silva dos reis")
+        )
 
-    #     print("gRPC client received: ", response)
+        response_payment = await stub_payment.Payment(
+            request=payment_pb2.PaymentRequest(
+                creditCard=credit_card,
+                amount=10,
+                store="CodeStore",
+                description="Example desc...",
+            )
+        )
+
+        print("gRPC client received: ", response_create_credit_card)
+        print("gRPC client received: ", response_payment)
 
     transactions_pagination_response = (
         await get_transactions_by_card_number_controller.handle(

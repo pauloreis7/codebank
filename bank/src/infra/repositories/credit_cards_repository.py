@@ -1,5 +1,5 @@
 from uuid import UUID
-from sqlalchemy import select, insert, update
+from sqlalchemy import select, insert, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.infra.pydantic.models.CreditCard import CreditCardSchema
@@ -14,6 +14,19 @@ class CreditCardsRepository(CreditCardsRepositoryInterface):
 
     def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
+
+    async def get_credit_cards_count(self) -> int:
+        """Get credit cards total count"""
+
+        async with self.db_session() as session:
+
+            query = func.count(CreditCard.id)
+
+            query_response = await session.execute(query)
+
+            credit_cards_count = query_response.scalar()
+
+            return credit_cards_count
 
     async def get_credit_card_by_id(self, credit_card_id: UUID) -> CreditCardSchema:
         """Get a credit card by it's id"""

@@ -8,6 +8,12 @@ class CreditCardsRepositoryInterface(ABC):
     """CreditCards Repository Interface"""
 
     @abstractmethod
+    async def get_credit_cards_count(self) -> int:
+        """Must implement"""
+
+        raise Exception("Must implement get_credit_cards_count method")
+
+    @abstractmethod
     async def get_credit_card_by_id(self, credit_card_id: UUID) -> CreditCard:
         """Must implement"""
 

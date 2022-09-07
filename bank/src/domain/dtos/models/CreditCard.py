@@ -13,5 +13,7 @@ class CreditCardBase(BaseModel):
     limit: float
 
 
-class CreditCardCreateDto(CreditCardBase):
+class CreditCardCreateDto(BaseModel):
     """Create credit card Model data"""
+
+    name: str
