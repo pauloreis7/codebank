@@ -15,7 +15,7 @@ class CreditCard(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid4)
     name = Column(String(50), nullable=False)
-    number = Column(String(50), nullable=False)
+    number = Column(String(50), unique=True, index=True, nullable=False)
     expiration_month = Column(Integer, nullable=False)
     expiration_year = Column(Integer, nullable=False)
     CVV = Column(Integer, nullable=False)

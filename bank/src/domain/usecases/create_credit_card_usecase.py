@@ -32,7 +32,7 @@ class CreateCreditCardUsecase:
         credit_card.expiration_year = credit_card_dto.expiration_year
         credit_card.CVV = credit_card_dto.CVV
         credit_card.balance = credit_card_dto.balance
-        credit_card.limit = credit_card_dto.limit
+        credit_card.limit = 1000.00
 
         check_credit_card_exists = (
             await self.__credit_cards_repository.get_credit_card_by_number(

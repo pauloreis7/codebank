@@ -37,17 +37,17 @@ async def main():
     )
     create_credit_card_controller = create_credit_card_composer(db_session=db_session)
 
-    await create_credit_card_controller.handle(
-        credit_card_dto=CreditCardCreateDto(
-            balance=0,
-            expiration_month=3,
-            expiration_year=2028,
-            limit=100000,
-            CVV=123,
-            name="PAULO SILVA DOS REIS",
-            number="1234567891234567",
-        )
-    )
+    # await create_credit_card_controller.handle(
+    #     credit_card_dto=CreditCardCreateDto(
+    #         balance=0,
+    #         expiration_month=3,
+    #         expiration_year=2028,
+    #         limit=100000,
+    #         CVV=123,
+    #         name="PAULO SILVA DOS REIS",
+    #         number="1234567891234567",
+    #     )
+    # )
 
     credit_card_response = (
         await get_credit_card_by_number_usecase.get_credit_card_by_number(
@@ -58,27 +58,27 @@ async def main():
 
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
 
-    async with insecure_channel(grpc_target) as channel:
-        stub = payment_pb2_grpc.PaymentServiceStub(channel)
+    # async with insecure_channel(grpc_target) as channel:
+    #     stub = payment_pb2_grpc.PaymentServiceStub(channel)
 
-        credit_card = {
-            "name": "PAULO SILVA DOS REIS",
-            "number": "1234567891234567",
-            "expirationMonth": 8,
-            "expirationYear": 2026,
-            "cvv": 123,
-        }
+    #     credit_card = {
+    #         "name": "PAULO SILVA DOS REIS",
+    #         "number": "1234567891234567",
+    #         "expirationMonth": 8,
+    #         "expirationYear": 2026,
+    #         "cvv": 123,
+    #     }
 
-        response = await stub.Payment(
-            request=payment_pb2.PaymentRequest(
-                creditCard=credit_card,
-                amount=10,
-                store="CodeStore",
-                description="Example desc...",
-            )
-        )
+    #     response = await stub.Payment(
+    #         request=payment_pb2.PaymentRequest(
+    #             creditCard=credit_card,
+    #             amount=10,
+    #             store="CodeStore",
+    #             description="Example desc...",
+    #         )
+    #     )
 
-        print("gRPC client received: ", response)
+    #     print("gRPC client received: ", response)
 
     transactions_pagination_response = (
         await get_transactions_by_card_number_controller.handle(
