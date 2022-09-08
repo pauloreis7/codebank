@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common'
+import { Controller, Get, Param, ValidationPipe } from '@nestjs/common'
+import { MessagePattern, Payload } from '@nestjs/microservices'
 
 import { CreditCardsService } from './credit-cards.service'
 import { CreateCreditCardDto } from './dto/create-credit-card.dto'
@@ -7,9 +8,17 @@ import { CreateCreditCardDto } from './dto/create-credit-card.dto'
 export class CreditCardsController {
   constructor(private readonly creditCardService: CreditCardsService) {}
 
-  @Post()
-  create(@Body() createCreditCardDto: CreateCreditCardDto) {
-    return this.creditCardService.create(createCreditCardDto)
+  @MessagePattern(process.env.KAFKA_CREATED_CREDIT_CARDS_TOPIC)
+  async create(
+    @Payload(new ValidationPipe())
+    message: CreateCreditCardDto
+  ) {
+    await this.creditCardService.create(
+      message.credit_card_name,
+      message.credit_card_number
+    )
+
+    return message
   }
 
   @Get(':card_number')
