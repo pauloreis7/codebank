@@ -16,9 +16,9 @@ def create_transaction_composer(db_session: AsyncSession):
     transactions_infra = TransactionsRepository(db_session)
     credit_cards_infra = CreditCardsRepository(db_session)
     message_producer = KafkaProducerProvider()
-    usecase = CreateTransactionUsecase(
+    use_case = CreateTransactionUsecase(
         credit_cards_infra, transactions_infra, message_producer
     )
-    controller = CreateTransactionController(usecase)
+    controller = CreateTransactionController(use_case)
 
     return controller

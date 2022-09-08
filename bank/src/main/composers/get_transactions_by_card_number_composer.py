@@ -16,7 +16,9 @@ def get_transactions_by_card_number_composer(db_session: AsyncSession):
 
     transactions_infra = TransactionsRepository(db_session)
     credit_cards_infra = CreditCardsRepository(db_session)
-    usecase = GetTransactionsByCardNumberUsecase(transactions_infra, credit_cards_infra)
-    controller = GetTransactionsByCardNumberController(usecase)
+    use_case = GetTransactionsByCardNumberUsecase(
+        transactions_infra, credit_cards_infra
+    )
+    controller = GetTransactionsByCardNumberController(use_case)
 
     return controller

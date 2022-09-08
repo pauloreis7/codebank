@@ -1,21 +1,35 @@
 from typing import Type
 from random import randint
 from datetime import datetime
+from json import dumps
+from os import getenv
+from dotenv import load_dotenv
 
 from src.domain.models.credit_card import CreditCard
 from src.domain.dtos.models.CreditCard import CreditCardCreateDto
 from src.domain.interfaces.repositories.credit_cards_repository import (
     CreditCardsRepositoryInterface,
 )
+from src.domain.interfaces.providers.message_producer_provider import (
+    MessageProducerProviderInterface,
+)
+
+load_dotenv()
+
+KAFKA_BOOTSTRAP_SERVERS = getenv("KAFKA_BOOTSTRAP_SERVERS")
+KAFKA_CREATED_CREDIT_CARDS_TOPIC = getenv("KAFKA_CREATED_CREDIT_CARDS_TOPIC")
 
 
 class CreateCreditCardUsecase:
     """Create credit card usecase"""
 
     def __init__(
-        self, credit_cards_repository: Type[CreditCardsRepositoryInterface]
+        self,
+        credit_cards_repository: Type[CreditCardsRepositoryInterface],
+        message_producer_provider: Type[MessageProducerProviderInterface],
     ) -> None:
         self.__credit_cards_repository = credit_cards_repository
+        self.__message_producer_provider = message_producer_provider
 
     async def create_credit_card(self, credit_card_dto: CreditCardCreateDto) -> None:
         """
@@ -51,6 +65,25 @@ class CreateCreditCardUsecase:
 
         response = await self.__credit_cards_repository.create_credit_card(
             credit_card=credit_card
+        )
+
+        created_credit_card_message = {
+            "credit_card_number": credit_card.number,
+            "credit_card_name": credit_card.name,
+            "credit_card_expiration_month": str(credit_card.expiration_month),
+            "credit_card_expiration_year": str(credit_card.expiration_year),
+            "credit_card_CVV": str(credit_card.CVV),
+            "credit_card_balance": str(credit_card.balance),
+            "credit_card_limit": str(credit_card.limit),
+            "issue_date": str(credit_card.created_at),
+        }
+
+        serialized_message = dumps(created_credit_card_message)
+
+        self.__message_producer_provider.publish(
+            bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+            topic=KAFKA_CREATED_CREDIT_CARDS_TOPIC,
+            message=serialized_message,
         )
 
         return response
