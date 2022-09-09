@@ -14,20 +14,20 @@ import {
 } from '@chakra-ui/react'
 
 import { Input } from '../components/Input'
-import { LoginTitle } from '../components/LoginTitle'
+import { IssueCardTitle } from '../components/IssueCardTitle'
 
-const Login: NextPage = () => {
+const IssueCard: NextPage = () => {
   const router = useRouter()
 
-  const [cardNumber, setCardNumber] = useState('')
+  const [name, setName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  async function handleSubmitCardNumber(event: FormEvent) {
+  async function handleSubmitName(event: FormEvent) {
     event.preventDefault()
 
     setIsLoading(true)
 
-    router.push(`invoices/${cardNumber}`)
+    router.push(`invoices/${name}`)
   }
 
   return (
@@ -62,7 +62,7 @@ const Login: NextPage = () => {
             alignItems="center"
             pt={{ base: '0', sm: '0', md: '7' }}
           >
-            <LoginTitle />
+            <IssueCardTitle />
 
             <Flex
               w="100%"
@@ -74,20 +74,14 @@ const Login: NextPage = () => {
               boxShadow="xl"
               borderRadius="sm"
             >
-              <VStack
-                as="form"
-                onSubmit={handleSubmitCardNumber}
-                w="100%"
-                gap="2"
-              >
+              <VStack as="form" onSubmit={handleSubmitName} w="100%" gap="2">
                 <Input
                   icon={BsFillCreditCardFill}
-                  value={cardNumber}
-                  name="card-number"
-                  setValue={setCardNumber}
-                  type="number"
-                  autoComplete="current-card-number"
-                  placeholder="Card number"
+                  value={name}
+                  name="card-name"
+                  setValue={setName}
+                  autoComplete="current-card-name"
+                  placeholder="Full name"
                   isRequired
                 />
 
@@ -109,10 +103,10 @@ const Login: NextPage = () => {
                   _active={{
                     backgroundColor: 'yellow.600'
                   }}
-                  disabled={cardNumber.length !== 16 || isLoading}
+                  disabled={name.length !== 5 || isLoading}
                   isLoading={isLoading}
                 >
-                  Login
+                  Generate
                 </Button>
               </VStack>
 
@@ -123,9 +117,9 @@ const Login: NextPage = () => {
                 fontSize="sm"
                 color="gray.400"
               >
-                <Text mr="1">Don&apos;t have a card?</Text>
+                <Text mr="1">See card invoices?</Text>
 
-                <Link href="/issue-card" as="/issue-card" passHref>
+                <Link href="/" as="/" passHref>
                   <ChakraLink
                     fontWeight="600"
                     color="yellow.500"
@@ -135,7 +129,7 @@ const Login: NextPage = () => {
                       filter: 'brightness(1.2)'
                     }}
                   >
-                    Generate now
+                    back to login
                   </ChakraLink>
                 </Link>
               </Flex>
@@ -147,4 +141,4 @@ const Login: NextPage = () => {
   )
 }
 
-export default Login
+export default IssueCard
