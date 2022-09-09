@@ -14,7 +14,8 @@ import {
 } from '@chakra-ui/react'
 
 import { Input } from '../components/Input'
-import { IssueCardTitle } from '../components/IssueCardTitle'
+// import { IssueCardTitle } from '../components/IssueCardTitle'
+import { CreditCard } from '../components/CreditCard'
 
 const IssueCard: NextPage = () => {
   const router = useRouter()
@@ -62,7 +63,15 @@ const IssueCard: NextPage = () => {
             alignItems="center"
             pt={{ base: '0', sm: '0', md: '7' }}
           >
-            <IssueCardTitle />
+            {/* <IssueCardTitle /> */}
+
+            <CreditCard
+              number={'1234 5678 9123 4567'}
+              name={'PAULO SILVA DOS REIS'}
+              expirationMonth={'02'}
+              expirationYear={'2025'}
+              CVV={'123'}
+            />
 
             <Flex
               w="100%"
