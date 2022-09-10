@@ -1,35 +1,17 @@
 import type { NextPage } from 'next'
 
-import { FormEvent, useState } from 'react'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { BsFillCreditCardFill } from 'react-icons/bs'
-import {
-  Link as ChakraLink,
-  Button,
-  Flex,
-  VStack,
-  Text
-} from '@chakra-ui/react'
+import { Link as ChakraLink, Flex, Text } from '@chakra-ui/react'
 
-import { Input } from '../components/Input'
-// import { IssueCardTitle } from '../components/IssueCardTitle'
+import { useHandleIssueCard } from '../hooks/useHandleIssueCard'
+import { IssueCardTitle } from '../components/IssueCardTitle'
 import { CreditCard } from '../components/CreditCard'
+import { IssueCardForm } from '../components/IssueCardForm'
 
 const IssueCard: NextPage = () => {
-  const router = useRouter()
-
-  const [name, setName] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-
-  async function handleSubmitName(event: FormEvent) {
-    event.preventDefault()
-
-    setIsLoading(true)
-
-    router.push(`invoices/${name}`)
-  }
+  const { data, name, setName, issueCardIsLoading, handleSubmit } =
+    useHandleIssueCard()
 
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
@@ -63,15 +45,17 @@ const IssueCard: NextPage = () => {
             alignItems="center"
             pt={{ base: '0', sm: '0', md: '7' }}
           >
-            {/* <IssueCardTitle /> */}
-
-            <CreditCard
-              number={'1234 5678 9123 4567'}
-              name={'PAULO SILVA DOS REIS'}
-              expirationMonth={'02'}
-              expirationYear={'2025'}
-              CVV={'123'}
-            />
+            {data ? (
+              <CreditCard
+                number={data?.creditCard.credit_card_number}
+                name={data?.creditCard.credit_card_name}
+                expirationMonth={data?.creditCard.credit_card_expiration_month}
+                expirationYear={data?.creditCard.credit_card_expiration_year}
+                CVV={data?.creditCard.credit_card_CVV}
+              />
+            ) : (
+              <IssueCardTitle />
+            )}
 
             <Flex
               w="100%"
@@ -83,41 +67,12 @@ const IssueCard: NextPage = () => {
               boxShadow="xl"
               borderRadius="sm"
             >
-              <VStack as="form" onSubmit={handleSubmitName} w="100%" gap="2">
-                <Input
-                  icon={BsFillCreditCardFill}
-                  value={name}
-                  name="card-name"
-                  setValue={setName}
-                  autoComplete="current-card-name"
-                  placeholder="Full name"
-                  isRequired
-                />
-
-                <Button
-                  type="submit"
-                  w="100%"
-                  h="3.125rem"
-                  backgroundColor="yellow.500"
-                  borderRadius="sm"
-                  border="0"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                  _hover={{
-                    backgroundColor: 'yellow.600'
-                  }}
-                  _focus={{
-                    backgroundColor: 'yellow.600'
-                  }}
-                  _active={{
-                    backgroundColor: 'yellow.600'
-                  }}
-                  disabled={name.length !== 5 || isLoading}
-                  isLoading={isLoading}
-                >
-                  Generate
-                </Button>
-              </VStack>
+              <IssueCardForm
+                value={name}
+                setValue={setName}
+                isLoading={issueCardIsLoading}
+                handleSubmit={handleSubmit}
+              />
 
               <Flex
                 w="100%"

@@ -89,6 +89,7 @@ const Login: NextPage = () => {
                   autoComplete="current-card-number"
                   placeholder="Card number"
                   isRequired
+                  valueLengthCondition={cardNumber.length === 16}
                 />
 
                 <Button

@@ -11,17 +11,24 @@ import { IconType } from 'react-icons'
 interface InputProps extends ChakraInputProps {
   icon?: IconType
   value: string
+  valueLengthCondition: boolean
   setValue: (value: string) => void
 }
 
-export function Input({ icon: Icon, value, setValue, ...rest }: InputProps) {
+export function Input({
+  icon: Icon,
+  value,
+  setValue,
+  valueLengthCondition,
+  ...rest
+}: InputProps) {
   return (
     <FormControl isInvalid={false}>
       <InputGroup w="100%" h="3.125rem">
         <InputLeftElement h="100%">
           <ChakraIcon
             as={Icon}
-            color={value.length === 16 ? 'yellow.500' : 'gray.600'}
+            color={valueLengthCondition ? 'yellow.500' : 'gray.600'}
             width="1.25rem"
             height="1.25rem"
           />
