@@ -15,6 +15,8 @@ export function CreditCard({
   expirationYear,
   CVV
 }: CreditCardProps) {
+  const formattedCardNumber = number.replace(/\d{4}(?=.)/g, '$& ')
+
   return (
     <Flex
       w="100%"
@@ -49,7 +51,7 @@ export function CreditCard({
         fontWeight="600"
         color="gray.300"
       >
-        {number}
+        {formattedCardNumber}
       </Text>
 
       <Text

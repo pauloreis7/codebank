@@ -47,11 +47,11 @@ const IssueCard: NextPage = () => {
           >
             {data ? (
               <CreditCard
-                number={data?.creditCard.credit_card_number}
-                name={data?.creditCard.credit_card_name}
-                expirationMonth={data?.creditCard.credit_card_expiration_month}
-                expirationYear={data?.creditCard.credit_card_expiration_year}
-                CVV={data?.creditCard.credit_card_CVV}
+                number={data?.creditCard.creditCardNumber}
+                name={data?.creditCard.creditCardName}
+                expirationMonth={data?.creditCard.creditCardExpirationMonth}
+                expirationYear={data?.creditCard.creditCardExpirationYear}
+                CVV={data?.creditCard.creditCard_CVV}
               />
             ) : (
               <IssueCardTitle />

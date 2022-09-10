@@ -35,7 +35,7 @@ export const useHandleIssueCard = () => {
         toast({
           title: 'success generating credit card.',
           description: 'Copy card infos, will not be displayed again!',
-          status: 'error',
+          status: 'success',
           duration: 5000,
           isClosable: true,
           position: 'top-right'
