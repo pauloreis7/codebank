@@ -1,4 +1,12 @@
-import { Controller, Get, Param, ValidationPipe } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  ValidationPipe
+} from '@nestjs/common'
 import { MessagePattern, Payload } from '@nestjs/microservices'
 
 import { CreditCardsService } from './credit-cards.service'
@@ -13,12 +21,20 @@ export class CreditCardsController {
     @Payload(new ValidationPipe())
     message: CreateCreditCardDto
   ) {
-    await this.creditCardService.create(
+    return this.creditCardService.create(
       message.credit_card_name,
       message.credit_card_number
     )
+  }
 
-    return message
+  @HttpCode(201)
+  @Post()
+  async issueCard(@Body() creditCardInfos: { cardName: string }) {
+    const response = await this.creditCardService.issueCard(
+      creditCardInfos.cardName
+    )
+
+    return response
   }
 
   @Get(':card_number')
