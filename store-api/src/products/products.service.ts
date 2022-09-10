@@ -12,7 +12,7 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     await this.prisma.product.create({
-      data: { ...createProductDto }
+      data: createProductDto
     })
   }
 
@@ -48,7 +48,7 @@ export class ProductsService {
 
     await this.prisma.product.update({
       where: { id },
-      data: { ...updateProductDto }
+      data: updateProductDto
     })
   }
 
