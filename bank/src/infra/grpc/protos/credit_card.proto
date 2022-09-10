@@ -1,12 +1,18 @@
 syntax = "proto3";
 package credit_card;
 
-import "google/protobuf/empty.proto";
-
 service CreateCreditCardService {
-    rpc CreateCreditCard(CreateCreditCardRequest) returns (google.protobuf.Empty) {}
+    rpc CreateCreditCard(CreateCreditCardRequest) returns (CreateCreditCardResponse) {}
 }
 
 message CreateCreditCardRequest {
   string name = 1;
+}
+
+message CreateCreditCardResponse {
+    string credit_card_number = 1;
+    string credit_card_name = 2;
+    string credit_card_expiration_month = 3;
+    string credit_card_expiration_year = 4;
+    string credit_card_CVV = 5;
 }

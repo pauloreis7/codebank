@@ -41,17 +41,17 @@ async def main():
             request=credit_card_pb2.CreateCreditCardRequest(name="paulo silva dos reis")
         )
 
-        response_payment = await stub_payment.Payment(
-            request=payment_pb2.PaymentRequest(
-                creditCard=credit_card,
-                amount=10,
-                store="CodeStore",
-                description="Example desc...",
-            )
-        )
+        # response_payment = await stub_payment.Payment(
+        #     request=payment_pb2.PaymentRequest(
+        #         creditCard=credit_card,
+        #         amount=10,
+        #         store="CodeStore",
+        #         description="Example desc...",
+        #     )
+        # )
 
         print("gRPC client received: ", response_create_credit_card)
-        print("gRPC client received: ", response_payment)
+        # print("gRPC client received: ", response_payment)
 
     await db_session().close()
 

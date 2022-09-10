@@ -3,7 +3,6 @@
 import grpc
 
 import src.infra.grpc.pb.credit_card_pb2 as credit__card__pb2
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class CreateCreditCardServiceStub(object):
@@ -18,7 +17,7 @@ class CreateCreditCardServiceStub(object):
         self.CreateCreditCard = channel.unary_unary(
             "/credit_card.CreateCreditCardService/CreateCreditCard",
             request_serializer=credit__card__pb2.CreateCreditCardRequest.SerializeToString,
-            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            response_deserializer=credit__card__pb2.CreateCreditCardResponse.FromString,
         )
 
 
@@ -37,7 +36,7 @@ def add_CreateCreditCardServiceServicer_to_server(servicer, server):
         "CreateCreditCard": grpc.unary_unary_rpc_method_handler(
             servicer.CreateCreditCard,
             request_deserializer=credit__card__pb2.CreateCreditCardRequest.FromString,
-            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            response_serializer=credit__card__pb2.CreateCreditCardResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -68,7 +67,7 @@ class CreateCreditCardService(object):
             target,
             "/credit_card.CreateCreditCardService/CreateCreditCard",
             credit__card__pb2.CreateCreditCardRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            credit__card__pb2.CreateCreditCardResponse.FromString,
             options,
             channel_credentials,
             insecure,

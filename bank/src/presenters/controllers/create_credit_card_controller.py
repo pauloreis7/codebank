@@ -18,8 +18,10 @@ class CreateCreditCardController(CreateCreditCardControllerInterface):
     async def handle(self, credit_card_dto: CreditCardCreateDto):
         """Handle to create credit card controller"""
 
-        await self.__use_case.create_credit_card(credit_card_dto=credit_card_dto)
+        credit_card = await self.__use_case.create_credit_card(
+            credit_card_dto=credit_card_dto
+        )
 
-        response = {"status_code": 201, "data": True}
+        response = {"status_code": 201, "data": credit_card}
 
         return response

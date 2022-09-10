@@ -10,7 +10,7 @@ from src.errors.grpc_request_error import GrpcRequestError
 from src.infra.grpc.pb.credit_card_pb2_grpc import CreateCreditCardServiceServicer
 from src.infra.grpc.pb.credit_card_pb2 import (
     CreateCreditCardRequest,
-    google_dot_protobuf_dot_empty__pb2,
+    CreateCreditCardResponse,
 )
 
 
@@ -24,16 +24,16 @@ class CreateCreditCardService(CreateCreditCardServiceServicer):
         self,
         request: CreateCreditCardRequest,
         context: ServicerContext,
-    ) -> google_dot_protobuf_dot_empty__pb2.Empty():
+    ) -> CreateCreditCardResponse:
 
         credit_card_dto = CreditCardCreateDto(name=request.name)
 
         try:
-            await self.__controller.handle(credit_card_dto=credit_card_dto)
+            response = await self.__controller.handle(credit_card_dto=credit_card_dto)
 
-            return google_dot_protobuf_dot_empty__pb2.Empty()
+            return CreateCreditCardResponse(**response["data"])
         except GrpcRequestError as error:
             context.set_code(error.code)
             context.set_details(error.message)
 
-            return google_dot_protobuf_dot_empty__pb2.Empty()
+            return

@@ -3,6 +3,7 @@ from random import randint
 from datetime import datetime
 from json import dumps
 from os import getenv
+from unicodedata import name
 from dotenv import load_dotenv
 
 from src.domain.models.credit_card import CreditCard
@@ -31,7 +32,7 @@ class CreateCreditCardUsecase:
         self.__credit_cards_repository = credit_cards_repository
         self.__message_producer_provider = message_producer_provider
 
-    async def create_credit_card(self, credit_card_dto: CreditCardCreateDto) -> None:
+    async def create_credit_card(self, credit_card_dto: CreditCardCreateDto):
         """
         Create credit_card model
         :param  - credit_card_dto: Credit card data for create
@@ -86,7 +87,19 @@ class CreateCreditCardUsecase:
             message=serialized_message,
         )
 
-        return response
+        formatted_response = {
+            "credit_card_number": created_credit_card_message["credit_card_number"],
+            "credit_card_name": created_credit_card_message["credit_card_name"],
+            "credit_card_expiration_month": created_credit_card_message[
+                "credit_card_expiration_month"
+            ],
+            "credit_card_expiration_year": created_credit_card_message[
+                "credit_card_expiration_year"
+            ],
+            "credit_card_CVV": created_credit_card_message["credit_card_CVV"],
+        }
+
+        return formatted_response
 
 
 def random_number_to_fixed_length(number_length):
