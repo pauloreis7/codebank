@@ -1,7 +1,6 @@
-from grpc.aio import server
-from asyncio import run
-from logging import info, basicConfig, INFO
+from logging import info
 from os import getenv
+from grpc.aio import server
 from dotenv import load_dotenv
 
 from src.main.composers.create_transaction_composer import create_transaction_composer
@@ -20,6 +19,8 @@ GRPC_PORT = getenv("GRPC_PORT")
 
 
 async def serve() -> None:
+    """Serve gRPC server"""
+
     grpc_server = server()
 
     db_session = await setup_db_session()
@@ -43,8 +44,3 @@ async def serve() -> None:
 
     await grpc_server.start()
     await grpc_server.wait_for_termination()
-
-
-if __name__ == "__main__":
-    basicConfig(level=INFO)
-    run(serve())

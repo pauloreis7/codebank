@@ -56,4 +56,4 @@ ARG PORT=50051
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-CMD ["python -m", "src.infra.grpc.server.grpc_server"]
+CMD ["python", "-m", "src.run"]

@@ -28,6 +28,8 @@ class GetCreditCardByNumberUsecase:
         )
 
         if credit_card is None:
-            raise GrpcRequestError(code=StatusCode.NOT_FOUND, message="Credit card not found")
+            raise GrpcRequestError(
+                code=StatusCode.NOT_FOUND, message="Credit card not found"
+            )
 
         return credit_card

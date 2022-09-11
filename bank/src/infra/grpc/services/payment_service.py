@@ -15,6 +15,8 @@ from src.infra.grpc.pb.payment_pb2 import (
 
 
 class PaymentService(PaymentServiceServicer):
+    """Payment gRPC servicer"""
+
     def __init__(
         self, create_transaction_controller: Type[CreateTransactionController]
     ) -> None:

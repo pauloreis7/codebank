@@ -1,7 +1,7 @@
 from typing import Type
 from os import getenv
-from dotenv import load_dotenv
 from json import dumps
+from dotenv import load_dotenv
 from grpc import StatusCode
 
 from src.domain.models.transaction import Transaction

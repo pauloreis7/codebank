@@ -1,15 +1,16 @@
 version: "3.8"
 
 services:
-  postgres-db:
-    container_name: postgres-db
+  postgres-bank-db:
+    container_name: postgres-bank-db
     image: postgres:latest
     restart: always
     ports:
-      - "5434:5434"
+      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: c011f0ae
+      POSTGRES_DB: codebank
 
   api:
     container_name: api
@@ -24,11 +25,11 @@ services:
     ports:
       - 50051:50051
     depends_on:
-      - postgres-db
+      - postgres-bank-db
     environment:
-      DATABASE_URL: "postgresql+asyncpg://postgres:c011f0ae@postgres-db:5434/postgres"
-      ENVIRONMENT: "PROD"
+      DATABASE_URL: "postgresql+asyncpg://postgres:c011f0ae@postgres-bank-db:5432/postgres"
       GRPC_PORT: 50051
       GRPC_HOST: host.docker.internal
       KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9094
       KAFKA_TRANSACTIONS_TOPIC: payments
+      KAFKA_CREATED_CREDIT_CARDS_TOPIC: created_credit_cards

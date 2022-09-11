@@ -15,6 +15,8 @@ from src.infra.grpc.pb.credit_card_pb2 import (
 
 
 class CreateCreditCardService(CreateCreditCardServiceServicer):
+    """Create credit card gRPC servicer"""
+
     def __init__(
         self, create_credit_card_controller: Type[CreateCreditCardController]
     ) -> None:

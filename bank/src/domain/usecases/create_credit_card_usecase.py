@@ -3,7 +3,6 @@ from random import randint
 from datetime import datetime
 from json import dumps
 from os import getenv
-from unicodedata import name
 from dotenv import load_dotenv
 
 from src.domain.models.credit_card import CreditCard
@@ -64,9 +63,7 @@ class CreateCreditCardUsecase:
         credit_card.balance = 0
         credit_card.limit = 1000.00
 
-        response = await self.__credit_cards_repository.create_credit_card(
-            credit_card=credit_card
-        )
+        await self.__credit_cards_repository.create_credit_card(credit_card=credit_card)
 
         created_credit_card_message = {
             "credit_card_number": credit_card.number,
@@ -103,6 +100,11 @@ class CreateCreditCardUsecase:
 
 
 def random_number_to_fixed_length(number_length):
+    """
+    Get a random number in number_length range
+    :param number_length: range to random number
+    """
+
     range_start = 10 ** (number_length - 1)
     range_end = (10**number_length) - 1
 
