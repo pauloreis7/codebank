@@ -3,7 +3,7 @@ export type ProductProps = {
   name: string
   description: string
   image_url: string
-  price: { s: number; e: number; d: number[] }
+  price: number
   created_at: string
 }
 
@@ -17,7 +17,7 @@ export type OrderInputs = {
 
 export type OrderProps = {
   orderId: string
-  total: string
+  total: number
   creditCard: {
     number: string
     expiration_month: string

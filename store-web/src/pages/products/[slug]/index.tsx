@@ -17,11 +17,6 @@ type ProductDetailsProps = {
 const ProductDetails: NextPage<ProductDetailsProps> = ({
   product
 }: ProductDetailsProps) => {
-  const formattedPrice = `${product.price.d[0]},${product.price.d[1]}`.slice(
-    0,
-    5
-  )
-
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
@@ -69,7 +64,7 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
             <ProductInfos
               name={product.name}
               description={product.description}
-              price={formattedPrice}
+              price={product.price}
               slug={product.id}
             />
           </Flex>

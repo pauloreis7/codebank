@@ -116,7 +116,7 @@ export const getStaticProps: GetStaticProps<OrderProps> = async ({
     return {
       props: {
         orderId: data.order.id,
-        total: String(data.order.total),
+        total: data.order.total,
         creditCard: {
           number: data.order.credit_card_number,
           expiration_month: String(data.order.credit_card_expiration_month),
