@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres-invoices-db:
+    container_name: postgres-invoices-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5434:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: c011f0ae
+      POSTGRES_DB: invoicesbank
+
+  invoices-api:
+    container_name: invoices-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "yarn prisma migrate deploy
+      && dumb-init node main.js"
+    ports:
+      - '3333:3333'
+    depends_on:
+      - postgres-invoices-db
+    environment:
+      DATABASE_URL: 'postgresql://postgres:c011f0ae@postgres-invoices-db:5432/postgres'
+      GRPC_HOST: host.docker.internal:50051
+      KAFKA_CLIENT_ID: codebank
+      KAFKA_HOST: host.docker.internal:9094
+      KAFKA_TRANSACTIONS_TOPIC: payments
+      KAFKA_CREATED_CREDIT_CARDS_TOPIC: created_credit_cards

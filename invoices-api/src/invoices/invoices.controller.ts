@@ -22,4 +22,9 @@ export class InvoicesController {
 
     return invoices
   }
+
+  @Get('/healthcheck')
+  healthcheck() {
+    return true
+  }
 }
