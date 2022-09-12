@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  postgres-store-db:
+    container_name: postgres-store-db
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: c011f0ae
+      POSTGRES_DB: storebank
+
+  store-api:
+    container_name: store-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "yarn prisma migrate deploy
+      && node seed.js
+      && dumb-init node main.js"
+    ports:
+      - '3333:3333'
+    depends_on:
+      - postgres-store-db
+    environment:
+      DATABASE_URL: 'postgresql://postgres:c011f0ae@postgres-store-db:5432/postgres'
+      GRPC_HOST: host.docker.internal:50051
+      STORE_NAME: 'Code Store'

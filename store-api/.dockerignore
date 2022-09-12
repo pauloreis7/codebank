@@ -1,0 +1,13 @@
+.git
+*Dockerfile*
+*docker-compose*
+node_modules
+
+.editorconfig
+.gitignore
+README.
+yarn-error.log
+*/*/node_modules
+*/*/build
+*/*/dist
+*.md
