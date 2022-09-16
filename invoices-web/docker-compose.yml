@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  invoices-web-client:
+    container_name: invoices-web-client
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: 'dumb-init node server.js'
+    ports:
+      - '3000:3000'
+    environment:
+      NEXT_PUBLIC_INVOICES_API_URL: http://localhost:8080
