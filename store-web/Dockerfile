@@ -24,7 +24,7 @@ RUN BUILD_MODE=production yarn build
 RUN yarn --production --prefer-offline --force --frozen-lockfile \
   && yarn cache clean --force
 
-FROM node:16-alpine AS runner
+FROM node:16-alpine as runner
 
 WORKDIR /app
 
@@ -41,7 +41,6 @@ RUN deluser --remove-home node \
   && adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

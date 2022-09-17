@@ -1,26 +1,25 @@
-FROM node:16-alpine as node_builder
+FROM node:16-alpine as deps
 
-ENV NODE_ENV build
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-RUN deluser --remove-home node \
-  && addgroup -S node -g 1000 \
-  && adduser -S -G node -u 999 node
+COPY --chown=node:node package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
-RUN mkdir /opt/node_app && chown node:node /opt/node_app
-WORKDIR /opt/node_app
+RUN \
+  if [ -f yarn.lock ]; then rm -rf node_modules && yarn install --frozen-lockfile --ignore-scripts --immutable --immutable-cache --check-cache; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-USER node
-COPY --chown=node:node package.json yarn.lock ./
-RUN rm -rf node_modules \
-  && yarn install --frozen-lockfile --ignore-scripts --immutable --immutable-cache --check-cache
+FROM node:16-alpine as builder
 
-ENV PATH /opt/node_app/node_modules/.bin:$PATH
+WORKDIR /app
 
-HEALTHCHECK --interval=30s CMD node healthcheck.js
-
-WORKDIR /opt/node_app/app
-
+COPY --from=deps /app/node_modules ./node_modules
 COPY --chown=node:node . .
+
+ENV PATH /app/node_modules/.bin:$PATH
 
 RUN yarn prisma:generate
 RUN yarn prisma:seedCompile
@@ -29,13 +28,23 @@ RUN BUILD_MODE=production yarn build
 RUN yarn --production --prefer-offline --force --frozen-lockfile \
   && yarn cache clean --force
 
-FROM node:16-alpine
+FROM node:16-alpine as runner
 
+ENV HOME /home/user
+ENV APP_HOME ${HOME}/app
+
+RUN mkdir -p ${HOME}
+RUN mkdir ${APP_HOME} && chown node:node ${APP_HOME}
+
+WORKDIR ${APP_HOME}
+
+ENV PATH /app/node_modules/.bin:$PATH
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
-ENV PATH /opt/node_app/node_modules/.bin:$PATH
 ARG PORT=3333
 ENV PORT $PORT
+
+HEALTHCHECK --interval=30s CMD node healthcheck.js
 
 RUN apk add dumb-init
 
@@ -43,15 +52,12 @@ RUN deluser --remove-home node \
   && addgroup -S node -g 1000 \
   && adduser -S -G node -u 999 node
 
-RUN mkdir /opt/node_app && chown node:node /opt/node_app
-WORKDIR /opt/node_app/app
-
 USER node
 
-COPY --from=node_builder /opt/node_app/app/package.json ./package.json
-COPY --from=node_builder /opt/node_app/app/node_modules ./node_modules
-COPY --from=node_builder /opt/node_app/app/dist ./
-COPY --from=node_builder /opt/node_app/app/prisma ./
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./
+COPY --from=builder /app/prisma ./
 
 EXPOSE $PORT
 
