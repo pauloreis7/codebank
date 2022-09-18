@@ -6,7 +6,7 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - '5433:5432'
+      - '5434:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: c011f0ae
@@ -22,10 +22,13 @@ services:
       && node seed.js
       && dumb-init node main.js"
     ports:
-      - '3333:3333'
+      - '8080:8080'
     depends_on:
       - postgres-store-db
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
     environment:
       DATABASE_URL: 'postgresql://postgres:c011f0ae@postgres-store-db:5432/postgres'
       GRPC_HOST: host.docker.internal:50051
       STORE_NAME: 'Code Store'
+      PORT: 8080

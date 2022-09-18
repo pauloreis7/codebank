@@ -16,6 +16,11 @@ FROM node:16-alpine as builder
 
 WORKDIR /app
 
+ARG NEXT_PUBLIC_STORE_API_URL='http://host.docker.internal:8080'
+ARG NEXT_PUBLIC_INVOICES_URL='http://host.docker.internal:3333'
+ENV NEXT_PUBLIC_STORE_API_URL=$NEXT_PUBLIC_STORE_API_URL
+ENV NEXT_PUBLIC_INVOICES_URL=$NEXT_PUBLIC_INVOICES_URL
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY --chown=node:node . .
 

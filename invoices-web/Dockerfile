@@ -16,6 +16,9 @@ FROM node:16-alpine as builder
 
 WORKDIR /app
 
+ARG NEXT_PUBLIC_INVOICES_API_URL='http://host.docker.internal:3333'
+ENV NEXT_PUBLIC_INVOICES_API_URL=$NEXT_PUBLIC_INVOICES_API_URL
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
@@ -24,7 +27,7 @@ RUN BUILD_MODE=production yarn build
 RUN yarn --production --prefer-offline --force --frozen-lockfile \
   && yarn cache clean --force
 
-FROM node:16-alpine AS runner
+FROM node:16-alpine as runner
 
 WORKDIR /app
 
@@ -41,7 +44,6 @@ RUN deluser --remove-home node \
   && adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

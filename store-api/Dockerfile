@@ -41,7 +41,7 @@ WORKDIR ${APP_HOME}
 ENV PATH /app/node_modules/.bin:$PATH
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
-ARG PORT=3333
+ARG PORT=8080
 ENV PORT $PORT
 
 HEALTHCHECK --interval=30s CMD node healthcheck.js

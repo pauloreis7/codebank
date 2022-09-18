@@ -6,10 +6,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_STORE_API_URL: http://host.docker.internal:8080
+        NEXT_PUBLIC_INVOICES_URL: http://host.docker.internal:3333
     restart: always
     command: 'dumb-init node server.js'
     ports:
-      - '3000:3000'
+      - 3001:3000
     environment:
-      NEXT_PUBLIC_STORE_API_URL: http://localhost:3333
-      NEXT_PUBLIC_INVOICES_URL: http://localhost:3001
+      NEXT_PUBLIC_STORE_API_URL: http://host.docker.internal:8080
+      NEXT_PUBLIC_INVOICES_URL: http://host.docker.internal:3333
