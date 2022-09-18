@@ -6,7 +6,7 @@ services:
     image: postgres:latest
     restart: always
     ports:
-      - '5434:5432'
+      - '5433:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: c011f0ae
@@ -21,9 +21,11 @@ services:
       sh -c "yarn prisma migrate deploy
       && dumb-init node main.js"
     ports:
-      - '3333:3333'
+      - 3333:3333
     depends_on:
       - postgres-invoices-db
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
     environment:
       DATABASE_URL: 'postgresql://postgres:c011f0ae@postgres-invoices-db:5432/postgres'
       GRPC_HOST: host.docker.internal:50051
@@ -31,3 +33,4 @@ services:
       KAFKA_HOST: host.docker.internal:9094
       KAFKA_TRANSACTIONS_TOPIC: payments
       KAFKA_CREATED_CREDIT_CARDS_TOPIC: created_credit_cards
+      PORT: 3333

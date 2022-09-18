@@ -84,7 +84,7 @@ const Order: NextPage<OrderProps> = ({
                 price={total}
               />
 
-              <InvoiceLink orderId="123456" />
+              <InvoiceLink creditCardNumber={creditCard.number} />
 
               <Divider mt="2" mb="6" borderColor="gray.600" />
 

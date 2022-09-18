@@ -1,10 +1,12 @@
 import { Flex, Text, Link as ChakraLink } from '@chakra-ui/react'
 
 type InvoiceLinkProps = {
-  orderId: string
+  creditCardNumber: string
 }
 
-export function InvoiceLink({ orderId }: InvoiceLinkProps) {
+export function InvoiceLink({ creditCardNumber }: InvoiceLinkProps) {
+  const invoiceLink = `${process.env.NEXT_PUBLIC_INVOICES_URL}/invoices/${creditCardNumber}`
+
   return (
     <Flex w="100%" alignItems="center" mt="4">
       <Text fontWeight="600" color="white">
@@ -12,7 +14,7 @@ export function InvoiceLink({ orderId }: InvoiceLinkProps) {
       </Text>
 
       <ChakraLink
-        href={`${process.env.NEXT_PUBLIC_INVOICES_URL}/invoice/${orderId}`}
+        href={invoiceLink}
         isExternal
         ml="2"
         color="yellow.500"
@@ -23,7 +25,7 @@ export function InvoiceLink({ orderId }: InvoiceLinkProps) {
           filter: 'brightness(0.8)'
         }}
       >
-        {process.env.NEXT_PUBLIC_INVOICES_URL}
+        {invoiceLink}
       </ChakraLink>
     </Flex>
   )
