@@ -30,8 +30,6 @@ export class CreditCardsController {
   @HttpCode(201)
   @Post()
   async issueCard(@Body() creditCardInfos: { cardName: string }) {
-    console.log('recived ===>', creditCardInfos.cardName)
-
     const response = await this.creditCardService.issueCard(
       creditCardInfos.cardName
     )

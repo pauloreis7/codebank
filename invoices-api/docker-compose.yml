@@ -24,8 +24,6 @@ services:
       - 3333:3333
     depends_on:
       - postgres-invoices-db
-    extra_hosts:
-      - 'host.docker.internal:172.17.0.1'
     environment:
       DATABASE_URL: 'postgresql://postgres:c011f0ae@postgres-invoices-db:5432/postgres'
       GRPC_HOST: host.docker.internal:50051

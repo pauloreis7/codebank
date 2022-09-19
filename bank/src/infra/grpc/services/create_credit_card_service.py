@@ -28,7 +28,9 @@ class CreateCreditCardService(CreateCreditCardServiceServicer):
         context: ServicerContext,
     ) -> CreateCreditCardResponse:
 
-        credit_card_dto = CreditCardCreateDto(name=request.name)
+        credit_card_dto = CreditCardCreateDto()
+
+        credit_card_dto.name = request.name
 
         try:
             response = await self.__controller.handle(credit_card_dto=credit_card_dto)
