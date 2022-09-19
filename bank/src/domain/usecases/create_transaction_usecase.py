@@ -87,6 +87,7 @@ class CreateTransactionUsecase:
             "credit_card_number": check_credit_card_exists.number,
             "amount": transaction.amount,
             "store": transaction.store,
+            "status": transaction.status,
             "description": transaction.description,
             "payment_date": str(transaction.created_at),
         }

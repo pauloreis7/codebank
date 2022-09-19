@@ -2,14 +2,23 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 
 import Head from 'next/head'
 import { AxiosError } from 'axios'
-import { Badge, Box, Divider, Flex, Heading, Image } from '@chakra-ui/react'
+import {
+  Badge,
+  Link as ChakraLink,
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  Icon,
+  Image
+} from '@chakra-ui/react'
+import { FiExternalLink } from 'react-icons/fi'
 
 import { api } from '../../services/api'
 import { getOrderResponse, OrderProps } from '../../types'
 import { ProductInfos } from '../../components/pages/productOrder/ProductInfos'
 import { BackButton } from '../../components/BackButton'
 import { CreditCardDetails } from '../../components/pages/productInvoice/CreditCardDetails'
-import { InvoiceLink } from '../../components/pages/productInvoice/InvoiceLink'
 
 const Order: NextPage<OrderProps> = ({
   orderId,
@@ -17,6 +26,8 @@ const Order: NextPage<OrderProps> = ({
   creditCard,
   product
 }: OrderProps) => {
+  const invoiceLink = `${process.env.NEXT_PUBLIC_INVOICES_URL}/invoices/${creditCard.number}`
+
   return (
     <Flex as="main" w="100%" minH="100%" flexDirection="column">
       <Head>
@@ -84,7 +95,21 @@ const Order: NextPage<OrderProps> = ({
                 price={total}
               />
 
-              <InvoiceLink creditCardNumber={creditCard.number} />
+              <ChakraLink
+                href={invoiceLink}
+                isExternal
+                display="flex"
+                alignItems="center"
+                mt="4"
+                color="yellow.500"
+                fontWeight="600"
+                _hover={{
+                  transition: 'filter 0.2s',
+                  filter: 'brightness(0.8)'
+                }}
+              >
+                Go to invoice <Icon as={FiExternalLink} ml="1.5" />
+              </ChakraLink>
 
               <Divider mt="2" mb="6" borderColor="gray.600" />
 

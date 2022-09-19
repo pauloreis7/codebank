@@ -7,8 +7,11 @@ import {
   IsString,
   MaxLength,
   Min,
-  ValidateNested
+  ValidateNested,
+  IsIn
 } from 'class-validator'
+
+const invoicesStatus = ['approved', 'rejected']
 
 export class CreateInvoiceDto {
   @IsString()
@@ -28,6 +31,11 @@ export class CreateInvoiceDto {
   @IsString()
   @IsNotEmpty()
   store: string
+
+  @MaxLength(255)
+  @IsString()
+  @IsIn(invoicesStatus)
+  status: string
 
   @IsString()
   @IsNotEmpty()

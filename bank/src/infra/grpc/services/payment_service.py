@@ -28,16 +28,16 @@ class PaymentService(PaymentServiceServicer):
         context: ServicerContext,
     ) -> google_dot_protobuf_dot_empty__pb2.Empty():
 
-        transaction_dto = TransactionCreateDto(
-            name=request.creditCard.name,
-            number=request.creditCard.number,
-            expirationMonth=request.creditCard.expirationMonth,
-            expirationYear=request.creditCard.expirationYear,
-            CVV=request.creditCard.cvv,
-            amount=request.amount,
-            store=request.store,
-            description=request.description,
-        )
+        transaction_dto = TransactionCreateDto()
+
+        transaction_dto.name = request.creditCard.name
+        transaction_dto.number = request.creditCard.number
+        transaction_dto.expirationMonth = request.creditCard.expirationMonth
+        transaction_dto.expirationYear = request.creditCard.expirationYear
+        transaction_dto.CVV = request.creditCard.cvv
+        transaction_dto.amount = request.amount
+        transaction_dto.store = request.store
+        transaction_dto.description = request.description
 
         try:
             await self.__controller.handle(transaction_dto=transaction_dto)
