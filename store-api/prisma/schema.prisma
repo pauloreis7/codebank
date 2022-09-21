@@ -55,5 +55,6 @@ model OrderItems {
 
 enum Status {
   APPROVED
+  REJECTED
   PENDING
 }

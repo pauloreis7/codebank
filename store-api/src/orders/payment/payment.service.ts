@@ -15,8 +15,12 @@ interface PaymentData {
   store: string
 }
 
+type PaymentResponse = {
+  status: 'approved' | 'rejected'
+}
+
 interface PaymentGrpcService {
-  payment(data: PaymentData): Observable<void>
+  payment(data: PaymentData): Observable<PaymentResponse>
 }
 
 @Injectable()

@@ -1,10 +1,8 @@
 syntax = "proto3";
 package payment;
 
-import "google/protobuf/empty.proto";
-
 service PaymentService {
-    rpc Payment(PaymentRequest) returns (google.protobuf.Empty) {}
+    rpc Payment(PaymentRequest) returns (PaymentResponse) {}
 }
 
 message PaymentRequest {
@@ -19,4 +17,8 @@ message PaymentRequest {
   double amount = 2;
   string store = 3;
   string description = 4;
+}
+
+message PaymentResponse {
+    string status = 1;
 }

@@ -6,7 +6,7 @@ type createCreditCardData = {
   name: string
 }
 
-type createCreditCardResponse = {
+type CreateCreditCardResponse = {
   credit_card_number: string
   credit_card_name: string
   credit_card_expiration_month: string
@@ -17,7 +17,7 @@ type createCreditCardResponse = {
 interface IssueCardGrpcService {
   createCreditCard(
     data: createCreditCardData
-  ): Observable<createCreditCardResponse>
+  ): Observable<CreateCreditCardResponse>
 }
 
 @Injectable()

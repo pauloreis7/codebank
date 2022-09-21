@@ -68,34 +68,46 @@ export class OrdersService {
 
     order.total = orderTotal
 
-    const orderId = await this.prisma.$transaction(async prisma => {
-      const createdOrder = await prisma.order.create({
-        data: {
-          ...order,
-          OrderItems: { createMany: { data: formattedOrderItems } }
-        }
-      })
+    const { orderId, paymentResponse } = await this.prisma.$transaction(
+      async prisma => {
+        const paymentResponse = await this.paymentService.payment({
+          creditCard: {
+            name: order.credit_card_name,
+            number: order.credit_card_number,
+            expirationMonth: order.credit_card_expiration_month,
+            expirationYear: order.credit_card_expiration_year,
+            cvv: order.credit_card_cvv
+          },
+          amount: order.total,
+          description: `Produtos: ${products.map(p => p.name).join(', ')}`,
+          store: process.env.STORE_NAME
+        })
 
-      await this.paymentService.payment({
-        creditCard: {
-          name: createdOrder.credit_card_name,
-          number: createdOrder.credit_card_number,
-          expirationMonth: createdOrder.credit_card_expiration_month,
-          expirationYear: createdOrder.credit_card_expiration_year,
-          cvv: createdOrder.credit_card_cvv
-        },
-        amount: order.total,
-        description: `Produtos: ${products.map(p => p.name).join(', ')}`,
-        store: process.env.STORE_NAME
-      })
+        const orderStatus =
+          paymentResponse.status === 'approved'
+            ? Status.APPROVED
+            : Status.REJECTED
 
-      const updatedOrder = await prisma.order.update({
-        where: { id: createdOrder.id },
-        data: { status: Status.APPROVED }
-      })
+        const createdOrder = await prisma.order.create({
+          data: {
+            total: order.total,
+            status: orderStatus,
+            credit_card_name: order.credit_card_name,
+            credit_card_number: order.credit_card_number,
+            credit_card_expiration_month: order.credit_card_expiration_month,
+            credit_card_expiration_year: order.credit_card_expiration_year,
+            credit_card_cvv: order.credit_card_cvv,
+            OrderItems: { createMany: { data: formattedOrderItems } }
+          }
+        })
 
-      return updatedOrder.id
-    })
+        return { orderId: createdOrder.id, paymentResponse }
+      }
+    )
+
+    if (paymentResponse.status === 'rejected') {
+      throw new HttpException('Transaction rejected', 400)
+    }
 
     return { orderId }
   }
