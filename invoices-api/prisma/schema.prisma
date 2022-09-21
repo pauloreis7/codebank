@@ -21,6 +21,7 @@ model CreditCard {
 model Invoice {
   id             String   @id @default(uuid())
   amount         Float
+  status         Status   @default(PENDING)
   credit_card_id String
   transaction_id String
   store          String
@@ -31,4 +32,10 @@ model Invoice {
   credit_card CreditCard @relation(fields: [credit_card_id], references: [id])
 
   @@map("invoices")
+}
+
+enum Status {
+  APPROVED
+  REJECTED
+  PENDING
 }
