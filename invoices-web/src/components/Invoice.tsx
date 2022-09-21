@@ -1,11 +1,19 @@
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Badge, Flex, Heading, Text } from '@chakra-ui/react'
+
+import { InvoiceStatus } from '../types'
 
 type InvoiceProps = {
   paymentDate: string
   transactionId: string
   amount: number
+  status: InvoiceStatus
   store: string
   description: string
+}
+
+const orderStatusColors = {
+  APPROVED: 'green',
+  REJECTED: 'red'
 }
 
 export function Invoice({
@@ -13,6 +21,7 @@ export function Invoice({
   transactionId,
   amount,
   store,
+  status,
   description
 }: InvoiceProps) {
   return (
@@ -23,13 +32,19 @@ export function Invoice({
       borderBottomWidth="1px"
       borderBottomColor="gray.600"
     >
-      <Text as="span" mb="3" color="gray.400">
-        {new Date(paymentDate).toLocaleDateString('en', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        })}
-      </Text>
+      <Flex alignItems="center" mb="3" gap="5">
+        <Text as="span" color="gray.400">
+          {new Date(paymentDate).toLocaleDateString('en', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric'
+          })}
+        </Text>
+
+        <Badge variant="outline" colorScheme={orderStatusColors[status]}>
+          {status}
+        </Badge>
+      </Flex>
 
       <Flex
         w="100%"

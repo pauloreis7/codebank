@@ -91,6 +91,7 @@ const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
                   amount={invoice.amount}
                   store={invoice.store}
                   description={invoice.description}
+                  status={invoice.status}
                   paymentDate={invoice.payment_date}
                 />
               ))
