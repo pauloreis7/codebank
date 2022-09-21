@@ -8,10 +8,7 @@ from src.domain.dtos.models.Transaction import TransactionCreateDto
 from src.errors.grpc_request_error import GrpcRequestError
 
 from src.infra.grpc.pb.payment_pb2_grpc import PaymentServiceServicer
-from src.infra.grpc.pb.payment_pb2 import (
-    PaymentRequest,
-    google_dot_protobuf_dot_empty__pb2,
-)
+from src.infra.grpc.pb.payment_pb2 import PaymentRequest, PaymentResponse
 
 
 class PaymentService(PaymentServiceServicer):
@@ -26,7 +23,7 @@ class PaymentService(PaymentServiceServicer):
         self,
         request: PaymentRequest,
         context: ServicerContext,
-    ) -> google_dot_protobuf_dot_empty__pb2.Empty():
+    ) -> PaymentResponse:
 
         transaction_dto = TransactionCreateDto()
 
@@ -40,11 +37,11 @@ class PaymentService(PaymentServiceServicer):
         transaction_dto.description = request.description
 
         try:
-            await self.__controller.handle(transaction_dto=transaction_dto)
+            response = await self.__controller.handle(transaction_dto=transaction_dto)
 
-            return google_dot_protobuf_dot_empty__pb2.Empty()
+            return PaymentResponse(**response["data"])
         except GrpcRequestError as error:
             context.set_code(error.code)
             context.set_details(error.message)
 
-            return google_dot_protobuf_dot_empty__pb2.Empty()
+            return

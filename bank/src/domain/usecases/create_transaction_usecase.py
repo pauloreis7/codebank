@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Literal, Type
 from os import getenv
 from json import dumps
 from dotenv import load_dotenv
@@ -36,7 +36,9 @@ class CreateTransactionUsecase:
         self.__transactions_repository = transactions_repository
         self.__message_producer_provider = message_producer_provider
 
-    async def create_transaction(self, transaction_dto: TransactionCreateDto) -> None:
+    async def create_transaction(
+        self, transaction_dto: TransactionCreateDto
+    ) -> Literal["approved", "rejected"]:
         """
         Create transaction model
         :param  - transaction_dto: Transaction data for create
@@ -100,4 +102,4 @@ class CreateTransactionUsecase:
             message=serialized_message,
         )
 
-        return response
+        return {"status": transaction.status}

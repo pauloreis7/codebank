@@ -15,10 +15,10 @@ class CreateCreditCardServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateCreditCard = channel.unary_unary(
-            "/credit_card.CreateCreditCardService/CreateCreditCard",
-            request_serializer=credit__card__pb2.CreateCreditCardRequest.SerializeToString,
-            response_deserializer=credit__card__pb2.CreateCreditCardResponse.FromString,
-        )
+                '/credit_card.CreateCreditCardService/CreateCreditCard',
+                request_serializer=credit__card__pb2.CreateCreditCardRequest.SerializeToString,
+                response_deserializer=credit__card__pb2.CreateCreditCardResponse.FromString,
+                )
 
 
 class CreateCreditCardServiceServicer(object):
@@ -27,53 +27,40 @@ class CreateCreditCardServiceServicer(object):
     def CreateCreditCard(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details("Method not implemented!")
-        raise NotImplementedError("Method not implemented!")
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_CreateCreditCardServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "CreateCreditCard": grpc.unary_unary_rpc_method_handler(
-            servicer.CreateCreditCard,
-            request_deserializer=credit__card__pb2.CreateCreditCardRequest.FromString,
-            response_serializer=credit__card__pb2.CreateCreditCardResponse.SerializeToString,
-        ),
+            'CreateCreditCard': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateCreditCard,
+                    request_deserializer=credit__card__pb2.CreateCreditCardRequest.FromString,
+                    response_serializer=credit__card__pb2.CreateCreditCardResponse.SerializeToString,
+            ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "credit_card.CreateCreditCardService", rpc_method_handlers
-    )
+            'credit_card.CreateCreditCardService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class CreateCreditCardService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def CreateCreditCard(
-        request,
-        target,
-        options=(),
-        channel_credentials=None,
-        call_credentials=None,
-        insecure=False,
-        compression=None,
-        wait_for_ready=None,
-        timeout=None,
-        metadata=None,
-    ):
-        return grpc.experimental.unary_unary(
-            request,
+    def CreateCreditCard(request,
             target,
-            "/credit_card.CreateCreditCardService/CreateCreditCard",
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/credit_card.CreateCreditCardService/CreateCreditCard',
             credit__card__pb2.CreateCreditCardRequest.SerializeToString,
             credit__card__pb2.CreateCreditCardResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-        )
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

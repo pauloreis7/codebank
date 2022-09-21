@@ -18,8 +18,10 @@ class CreateTransactionController(CreateTransactionControllerInterface):
     async def handle(self, transaction_dto: TransactionCreateDto):
         """Handle to create transaction controller"""
 
-        await self.__use_case.create_transaction(transaction_dto=transaction_dto)
+        transaction_response = await self.__use_case.create_transaction(
+            transaction_dto=transaction_dto
+        )
 
-        response = {"status_code": 201, "data": True}
+        response = {"status_code": 201, "data": transaction_response}
 
         return response

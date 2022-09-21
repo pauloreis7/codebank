@@ -2,7 +2,6 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 import src.infra.grpc.pb.payment_pb2 as payment__pb2
 
 
@@ -18,7 +17,7 @@ class PaymentServiceStub(object):
         self.Payment = channel.unary_unary(
             "/payment.PaymentService/Payment",
             request_serializer=payment__pb2.PaymentRequest.SerializeToString,
-            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            response_deserializer=payment__pb2.PaymentResponse.FromString,
         )
 
 
@@ -37,7 +36,7 @@ def add_PaymentServiceServicer_to_server(servicer, server):
         "Payment": grpc.unary_unary_rpc_method_handler(
             servicer.Payment,
             request_deserializer=payment__pb2.PaymentRequest.FromString,
-            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            response_serializer=payment__pb2.PaymentResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -68,7 +67,7 @@ class PaymentService(object):
             target,
             "/payment.PaymentService/Payment",
             payment__pb2.PaymentRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            payment__pb2.PaymentResponse.FromString,
             options,
             channel_credentials,
             insecure,
