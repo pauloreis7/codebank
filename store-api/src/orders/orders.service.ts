@@ -133,7 +133,7 @@ export class OrdersService {
     }
 
     order.credit_card_number =
-      '************' + order.credit_card_number.substr(-4)
+      '************' + order.credit_card_number.substring(12)
 
     const product = await this.prisma.product.findUnique({
       where: { id: order.OrderItems[0].product_id }

@@ -22,7 +22,7 @@ async function getInvoices(
     `invoices/${creditCardNumber}`
   )
 
-  return { invoices }
+  return { invoices: invoices.reverse() }
 }
 
 export function useInvoices(

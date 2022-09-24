@@ -1,15 +1,15 @@
-import { Box, Flex, Heading, Icon, Text } from '@chakra-ui/react'
-import { RiBankLine } from 'react-icons/ri'
+import { Box, Flex, Heading, Img, Text } from '@chakra-ui/react'
 
 export function LoginTitle() {
   return (
     <Flex flexDirection="column" w="100%" maxWidth="30rem">
       <Flex mb="4" alignItems="center">
-        <Icon
-          as={RiBankLine}
-          mr="2"
-          fontSize={['3xl', '4xl']}
-          color="gray.300"
+        <Img
+          src="/logo.png"
+          alt="Codebank Logo"
+          mr="4"
+          w="100%"
+          maxWidth="2.25rem"
         />
 
         <Text fontSize={['2xl', '3xl']} fontWeight="bold">

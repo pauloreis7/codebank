@@ -119,7 +119,7 @@ export const getStaticProps: GetStaticProps<InvoicesProps> = async ({
 
     return {
       props: {
-        invoices
+        invoices: invoices.reverse()
       },
       revalidate: 1 * 60 // 60 seconds
     }
