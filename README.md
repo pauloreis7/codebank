@@ -93,6 +93,8 @@
 - [x] Asynchronous messaging system for communication between microservices
 - [x] Use gRPC and HTTP2 for web communication
 - [x] Containerization of all microservices
+- [x] Integration of kafka connect with elasticsearch and kibana
+- [x] Use elasticsearch and kibana to visualize transaction metrics dashboards
 
 - [x] Microservice: bank
 - [x] Microservice: store-api
@@ -109,6 +111,8 @@
 ### 💻 Project developed with the following technologies
 
 - [Apache Kafka](https://kafka.apache.org/)
+- [Elasticsearch](https://www.elastic.co/elasticsearch/)
+- [Kibana](https://www.elastic.co/kibana/)
 - [Docker](https://www.docker.com/)
 - [gRPC](https://www.grpc.io/)
 - [Postgresql](https://www.postgresql.org/)
