@@ -37,7 +37,6 @@ const Invoices: NextPage<InvoicesProps> = ({ invoices }: InvoicesProps) => {
       <Head>
         <title>Invoices | CodeBank</title>
         <meta name="description" content="CodeBank Invoices" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Header />

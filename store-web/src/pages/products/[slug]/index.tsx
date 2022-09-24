@@ -22,7 +22,6 @@ const ProductDetails: NextPage<ProductDetailsProps> = ({
       <Head>
         <title>{`${product.name} | CodeBank`}</title>
         <meta name="description" content="CodeBank Product details" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Flex minHeight="90vh" flexDirection="column" alignItems="center">

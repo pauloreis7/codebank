@@ -21,7 +21,6 @@ const Order: NextPage<OrderProps> = ({
       <Head>
         <title>Order | CodeBank</title>
         <meta name="description" content="CodeBank Order details" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Flex minHeight="90vh" flexDirection="column" alignItems="center">

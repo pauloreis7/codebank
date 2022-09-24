@@ -28,7 +28,6 @@ const ProductOrder: NextPage<ProductOrderProps> = ({
       <Head>
         <title>{`${product.name} | Checkout`}</title>
         <meta name="description" content="CodeBank Checkout" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Flex flexDirection="column" alignItems="center">

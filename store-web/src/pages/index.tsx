@@ -17,7 +17,6 @@ const Home: NextPage<HomeProps> = ({ products }: HomeProps) => {
       <Head>
         <title>Home | CodeBank</title>
         <meta name="description" content="CodeBank Home" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Flex flexDirection="column" alignItems="center">
